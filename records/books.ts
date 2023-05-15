@@ -29,5 +29,19 @@ export class BooksRecord {
             publicationYear: this.publicationYear,
             isbn: this.isbn,
         });
+    }
+    async insert(): Promise<void> {
+        await pool.execute("INSERT INTO `books`(`author`, `title`, `isAvailable`, `publicationYear`, `isbn`) VALUES(:author, title, isAvailable, publicationYear, isbn)", {
+            author: this.author,
+            title: this.title,
+            isAvailable: this.isAvailable,
+            publicationYear: this.publicationYear,
+            isbn: this.isbn,
+        });
+    }
+    static async delete(isbn): Promise<void> {
+        await pool.execute("DELETE FROM `books` WHERE `isbn` = :isbn", {
+            isbn,
+        });
     };
 }
