@@ -44,6 +44,23 @@ export class BookRepository{
           throw new Error(`Error while trying to get book by id: ${id}`);
         }
     }
+
+    async getByISBN(ISBN: string) {
+        const queryText = `SELECT id_book, isbn, title, author, year, isavailable FROM book WHERE isbn = $1;`;
+        const values = [ISBN];
+
+        try {
+          const result = await query(queryText, values);
+          if (result.rows.length === 0) {
+            return null; // Book not found
+          }
+      
+          const row = result.rows[0];
+          return new BookDTO(row.id_book, row.isbn, row.title, row.author, row.year, row.isavailable);
+        } catch (error) {
+          throw new Error(`Error while trying to get book by ISBN: ${ISBN}`);
+        }
+    }
     
     async getByTitle(title: string): Promise<BookDTO | null> {
         const queryText = 'SELECT id_book, isbn, title, author, year, isavailable FROM book WHERE title = $1;';
