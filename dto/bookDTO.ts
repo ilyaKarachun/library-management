@@ -1,11 +1,13 @@
 class BookDTO {
+    private _bookId: number;
     private _ISBN: string;
     private _title: string;
     private _author: string;
     private _year: number;
     private _isAvailable: boolean;
 
-    constructor(ISBN: string, title: string, author: string, year: number, isAvailable: boolean){
+    constructor(bookId: number, ISBN: string, title: string, author: string, year: number, isAvailable: boolean){
+        this._bookId = bookId;
         this._ISBN = ISBN;
         this._title = title;
         this._author = author;
