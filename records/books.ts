@@ -12,7 +12,22 @@ export class BooksRecord {
         this.isAvailable = obj.isAvailable;
     }
     static async listAll(): Promise<BooksRecord[]> {
-        const [ results ] = await @TODO settingsofdb("SELECT `title`, `author`, `isbn` FROM 'books');
+        const [ results ] = await pool.execute("SELECT `title`, `author`, `isbn` FROM `books`")
         return results.map(obj => new BooksRecord(obj));
     }
+    static async getOne(isbn: number): Promise<BooksRecord | null> {
+        const [ results ] = await pool.execute("SELECT `title`, `author`, `isbn` FROM `books` WHERE `isbn` = :isbn", {
+            isbn,
+        });
+        return results.length === 0 ? null : new BooksRecord(results[0]);
+    }
+    async update(): Promise<void> {
+        await pool.execute("UPDATE `books` SET `author` = :author, `title` = :title, `isAvailable` = :isAvailable, `publicationYear` = :publicationYear WHERE `isbn` = :isbn", {
+            author: this.author,
+            title: this.title,
+            isAvailable: this.isAvailable,
+            publicationYear: this.publicationYear,
+            isbn: this.isbn,
+        });
+    };
 }
