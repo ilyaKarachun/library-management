@@ -41,7 +41,17 @@ export class BorrowerRepository{
         catch(err){
             throw new Error(`Error while creating borrower`);
         }
-    }
+    };
+    update = async (borrower: BorrowerDTO) => {
+        const queryText = 'UPDATE borrower SET first_name = $1, last_name = $2, email = $3 WHERE id_borrower = $4';
+        const values = [borrower.firstName, borrower.lastName, borrower.email, borrower.id];
+        try{
+            await query(queryText, values);
+            console.log("Borrower updated");
+        }catch(err){
+            throw new Error(`Error while updating borrower`);
+        }
+    };
     delete = async (id: number) => {
         const queryText = 'DELETE FROM borrower WHERE id_borrower = $1';
         const values = [id];

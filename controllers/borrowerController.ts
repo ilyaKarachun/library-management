@@ -35,7 +35,17 @@ export class BorrowerController{
             res.status(500).json({message: "error getting controller"});
         }
     };
-
+    updateBorrower = async (req: Request, res: Response) => {
+        const borrower = new BorrowerDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email);
+        try{
+            await borrowerRepository.update(borrower);
+            res.status(200).json({
+                message: 'Borrower updated successfully',
+            });
+        }catch(err){
+            res.status(500).json({message: "error updating controller"});
+        }
+    };
     
     createBorrower = async (req: Request, res: Response) => {
         const borrower = new BorrowerDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email);
