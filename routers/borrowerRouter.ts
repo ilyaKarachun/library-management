@@ -5,9 +5,9 @@ const borrowerController = new BorrowerController();
 
 const router = Router();
 
-router.get('/', borrowerController.getBorrowers);
-router.get('/:id', borrowerController.getBorrowerById);
-router.get('/email/:email', borrowerController.getBorrowerByEmail);
-router.post('/', borrowerController.createBorrower);
-router.put('/', borrowerController.updateBorrower);
-router.delete('/:id', borrowerController.deleteBorrower);
+router.get('/borrowers', borrowerController.getBorrowers);
+router.get('/borrowers/:id', borrowerController.getBorrowerById);
+router.get('/borrowers/email/:email', borrowerController.getBorrowerByEmail);
+router.post('/borrowers', borrowerController.createBorrower);
+router.put('/borrowers', borrowerController.updateBorrower);
+router.delete('/borrowers/:id', borrowerController.deleteBorrower);

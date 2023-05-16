@@ -2,12 +2,13 @@ import {Request, Response} from 'express';
 import { BorrowerRepository } from '../repositories/borrowerRepository';
 import { BorrowerDTO } from '../dtos/borrowerDTO';
 
-const borrowerRepository = new BorrowerRepository();
+
 
 export class BorrowerController{
+    private borrowerRepository = new BorrowerRepository();
     getBorrowers = async (req: Request, res: Response) => {
         try{
-            const borrowers = await borrowerRepository.getAll();
+            const borrowers = await this.borrowerRepository.getAll();
             if (!borrowers) {
                 res.status(404).json({message: 'No borrowers found'});
             }
@@ -22,7 +23,7 @@ export class BorrowerController{
     getBorrowerById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try{
-            const borrower = await borrowerRepository.getById(id);
+            const borrower = await this.borrowerRepository.getById(id);
             if(!borrower){
                 res.status(404).json({message: 'No borrower found'});
             }
@@ -36,9 +37,9 @@ export class BorrowerController{
         }
     };
     updateBorrower = async (req: Request, res: Response) => {
-        const borrower = new BorrowerDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email);
+        const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email);
         try{
-            await borrowerRepository.update(borrower);
+            await this.borrowerRepository.update(borrower);
             res.status(200).json({
                 message: 'Borrower updated successfully',
             });
@@ -50,7 +51,7 @@ export class BorrowerController{
     createBorrower = async (req: Request, res: Response) => {
         const borrower = new BorrowerDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email);
         try{
-            const result = await borrowerRepository.create(borrower);
+            const result = await this.borrowerRepository.create(borrower);
             res.status(201).json({
                 data: result,
                 message: 'Borrower created successfully',
@@ -62,7 +63,7 @@ export class BorrowerController{
     deleteBorrower = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try{
-            await borrowerRepository.delete(id);
+            await this.borrowerRepository.delete(id);
             res.status(200).json({
                 message: 'Borrower deleted successfully',
             });
@@ -73,7 +74,7 @@ export class BorrowerController{
     getBorrowerByEmail = async (req: Request, res: Response) => {
         const email = req.params.email;
         try{
-            await borrowerRepository.getByEmail(email);
+            await this.borrowerRepository.getByEmail(email);
             res.status(200).json({
                 message: 'Borrower retrieved successfully',
             });
