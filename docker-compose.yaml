@@ -2,6 +2,9 @@ version: "3.8"
 
 services:
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: node:latest
     working_dir: /app
     environment:
@@ -14,8 +17,11 @@ services:
       - .:/app
     ports:
       - 3000:3000
+
     depends_on:
       - db
+
+    command: sh -c "npm install && npm start"
 
   db:
     image: postgres:latest
