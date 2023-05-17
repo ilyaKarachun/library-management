@@ -11,3 +11,5 @@ router.get('/borrowers/email/:email', borrowerController.getBorrowerByEmail);
 router.post('/borrowers', borrowerController.createBorrower);
 router.put('/borrowers', borrowerController.updateBorrower);
 router.delete('/borrowers/:id', borrowerController.deleteBorrower);
+
+export default router;
