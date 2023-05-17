@@ -1,5 +1,5 @@
-import {query} from '../db';
-import BorrowerDTO from '../dto/borrowerDTO';
+const {query} = require('../db/index');
+const {BorrowerDTO} = require('../dtos/borrowerDTO');
 
 export class BorrowerRepository{
     async getAll(){
@@ -30,7 +30,7 @@ export class BorrowerRepository{
         }
         return null;
     };
-    create = async (borrower: BorrowerDTO) => {
+    create = async (newBorrower: BorrowerDTO) => {
         const queryText = 'INSERT INTO borrower (first_name, last_name, email) VALUES ($1, $2, $3) RETURNING id_borrower';
         const values = [borrower.firstName, borrower.lastName, borrower.email];
         try{
@@ -42,7 +42,7 @@ export class BorrowerRepository{
             throw new Error(`Error while creating borrower`);
         }
     };
-    update = async (borrower: BorrowerDTO) => {
+    update = async (newBorrower: BorrowerDTO) => {
         const queryText = 'UPDATE borrower SET first_name = $1, last_name = $2, email = $3 WHERE id_borrower = $4';
         const values = [borrower.firstName, borrower.lastName, borrower.email, borrower.id];
         try{
