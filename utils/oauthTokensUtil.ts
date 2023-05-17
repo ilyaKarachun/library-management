@@ -2,8 +2,8 @@ import { Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { redisClient } from '../db/redis';
 
-const accessTokenExpiration = 900;
-const refreshTokenExpiration = 21600;
+const accessTokenExpiration = parseInt(process.env.ACCESS_TOKEN_EXP!);
+const refreshTokenExpiration = parseInt(process.env.REFRESH_TOKEN_EXP!);
 
 //Generates a new pair of tokens
 function generateTokens(): {accessToken: string, refreshToken: string} {
