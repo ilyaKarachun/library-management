@@ -94,5 +94,6 @@ As it can be seen in the diagrams, this database has 3 entities: Borrowers, Book
 
 ## Relationships
 
-- Books has a one-to-many relationship with Authors because a book can have only one author but an Author can write many books.
-- Books has a many-to-many relationship with Borrowers because a book can be borrowed many times and a borrower can make many borrowings.
+- *Books* has a one-to-many relationship with *Authors* because a book can have only one author but an Author can write many books.
+
+- *Books* has a many-to-many relationship with *Borrowers* because a book can be borrowed many times and a borrower can make many borrowings.
