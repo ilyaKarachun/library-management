@@ -7,7 +7,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
     try {
         if(req.headers.cookie){
             const { accessToken, refreshToken } = parseCookies(req.headers.cookie);
-            const accessTokenData = await validateToken(accessToken);
+            const accessTokenData = await validateToken(accessToken, "access");
 
             if(accessTokenData){    //accessToken is valid
                 const {userId} = accessTokenData;
@@ -16,7 +16,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
             }
 
             //accessToken invalid - check refreshToken
-            const refreshTokenData = await validateToken(refreshToken);
+            const refreshTokenData = await validateToken(refreshToken, "refresh");
 
             if(refreshTokenData){   //refreshToken is valid
                 const {userId} = refreshTokenData;

@@ -13,7 +13,7 @@ function generateTokens(): {accessToken: string, refreshToken: string} {
 }
 
 //Store tokens pair in redis db
-async function storeTokens(tokens: {accessToken: string, refreshToken: string}, userId: string): Promise<any>{
+async function storeTokens(tokens: {accessToken: string, refreshToken: string}, userId: string): Promise<void>{
     try {
         await redisClient.set(
             tokens.accessToken,
@@ -56,20 +56,25 @@ function deleteTokenCookies(res: Response): Response{
 }
 
 //Validate a token. If valid, returns tokenData. Else returns null
-async function validateToken(token: string | undefined): Promise<any> {
+async function validateToken(token: string | undefined, type: string): Promise<{tokenType: string, userId: string} | null> {
     try {
-        let data = (token) ? await redisClient.get(token as any) : null;
-        if (data) {
-            data = JSON.parse(data);
+        if(token){
+            const data = await redisClient.get(token);
+            if(data) {
+                const parsedData: {tokenType: string, userId: string} = JSON.parse(data);
+                if(parsedData.tokenType === type){
+                    return parsedData;
+                }
+            }
         }
-        return data;
+        return null;
     } catch (err) {
         console.error(err);
         throw err;
     }
 }
 
-async function refreshTokens(refreshToken: string, userId: string): Promise<any>{
+async function refreshTokens(refreshToken: string, userId: string): Promise<{accessToken: string, refreshToken: string}>{
     try{
         await deleteToken(refreshToken);
         const tokens = generateTokens();

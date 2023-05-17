@@ -21,23 +21,18 @@ export class AuthController{
     
         try {
             const user = await this.userRepository.login(email);
-
             if(!user){
                 return res.status(404).json({ error: "User not found" });
             }
-
             const isVerified = await argon2.verify(user.passwordHash, password);
     
             if(isVerified){
                 //generate tokens
                 const tokens = generateTokens();
-        
                 //store tokens in Redis
                 storeTokens(tokens, user.idUser);
-        
                 //set cookies with tokens in response header
                 res = setTokenCookies(res, tokens);
-        
                 //login succesful
                 res.status(200).json({ message: "Ok - logged in" });
             } else {
@@ -53,13 +48,10 @@ export class AuthController{
         try {
             if(req.headers.cookie){
                 const { accessToken, refreshToken } = parseCookies(req.headers.cookie);
-    
                 await deleteToken(accessToken);
                 await deleteToken(refreshToken);
-
                 res = deleteTokenCookies(res);
             }
-    
             res.status(200).json({ message: "Ok - logged out" });
         } catch (err) {
             res.status(500).json({ error: "Internal server error" });
