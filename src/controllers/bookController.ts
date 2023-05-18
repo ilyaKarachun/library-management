@@ -10,7 +10,7 @@ class BookController {
   }
   getBooks = async (req: Request, res: Response): Promise<void> => {
     try {
-      const books = await this.bookRepository.getall();
+      const books: BookDTO[] = await this.bookRepository.getall();
       if (!books) {
         res.status(404).send(`books table is empty`);
       } else {
