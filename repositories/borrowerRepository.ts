@@ -1,4 +1,4 @@
-const {query} = require('../db/index');
+import  query  from '../db/db'
 import BorrowerDTO from '../dtos/borrowerDTO';
 
 export class BorrowerRepository{
