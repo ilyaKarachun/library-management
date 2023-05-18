@@ -11,7 +11,11 @@ class BookController {
   getBooks = async (req: Request, res: Response): Promise<void> => {
     try {
       const books = await this.bookRepository.getall();
-      res.status(200).json(books);
+      if (!books) {
+        res.status(404).send(`books table is empty`);
+      } else {
+        res.status(200).json(books);
+      }
     } catch (err) {
       console.error(err);
       res.status(500).send("Something broke!");
@@ -25,7 +29,7 @@ class BookController {
       if (!book) {
         res.status(404).send(`Book with ID ${isbn} not found`);
       } else {
-        res.json(book);
+        res.status(200).json(book);
       }
     } catch (err) {
       console.error(err);
@@ -59,7 +63,7 @@ class BookController {
   };
 
   putBook = async (req: Request, res: Response): Promise<void> => {
-    const isbn: number = Number(req.params.isbn);
+    const isbn: string = String(req.params.isbn);
     const { ISBN, title, author, year, isAvailable }: BookDTO = req.body;
     const newBook = new BookDTO(ISBN, title, author, year, isAvailable);
     try {
@@ -69,7 +73,7 @@ class BookController {
       if (!updatedBook) {
         res.status(404).send(`Book with ibsn ${isbn} not found`);
       } else {
-        res.json(updatedBook);
+        res.status(200).json(updatedBook);
       }
     } catch (err) {
       console.error(err);
@@ -80,11 +84,11 @@ class BookController {
   deleteBook = async (req: Request, res: Response): Promise<void> => {
     const ISBN: string = String(req.params.isbn);
     try {
-      const result: String = await this.bookRepository.delete(ISBN);
+      const result: string = await this.bookRepository.delete(ISBN);
       if (!result) {
         res.status(404).send(`Book with ISBN ${ISBN} not found`);
       } else {
-        res.json({ message: `${result}` });
+        res.status(204).json({ message: `${result}` });
       }
     } catch (err) {
       console.error(err);
