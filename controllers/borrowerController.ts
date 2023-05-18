@@ -56,7 +56,7 @@ export class BorrowerController{
     };
 
     updateBorrower = async (req: Request, res: Response) => {
-        const borrower: BorrowerDTO = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email);
+        const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email);
         try{
             await this.borrowerRepository.update(borrower);
             res.status(200).json({
@@ -68,7 +68,7 @@ export class BorrowerController{
     };
     
     createBorrower = async (req: Request, res: Response) => {
-        const borrower: BorrowerDTO = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email, req.body.id);
+        const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email, req.body.id);
         try{
             const result = await this.borrowerRepository.create(borrower);
             res.status(201).json({
