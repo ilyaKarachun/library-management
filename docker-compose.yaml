@@ -16,6 +16,7 @@ services:
       - 3000:3000
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:latest
@@ -26,3 +27,17 @@ services:
       POSTGRES_DB: "library_managment"
     ports:
       - "5432:5432"
+
+  redis:
+    container_name: ${REDIS_HOST}
+    image: redis
+    env_file:
+      - .env
+    expose:
+      - ${REDIS_PORT}
+    volumes:
+      - "redis_data:/data"
+
+volumes:
+  redis_data:
+  db_data:
