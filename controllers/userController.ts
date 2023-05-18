@@ -19,6 +19,18 @@ export class UserController {
             res.status(500).json({ message: "error getting users" });
         }
     };
+    createUser = async (req: Request, res: Response) => {
+        const user = new UserDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email, req.body.hashed_pass);
+        try {
+            const result = await this.userRepo.create(user);
+            res.status(201).json({
+                data: result,
+                message: 'User created successfully',
+            });
+        } catch (err) {
+            res.status(500).json({ message: "error creating user" });
+        }
+    };
     getUserById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try {

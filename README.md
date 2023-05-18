@@ -9,6 +9,8 @@ Library management system that allows users to manage books, borrowers and borro
 
 - [User Functionalities](https://github.com/ilyaKarachun/library-management#user-functionalities)
 
+- [OAuth 2.0 Authorization Protocol](https://github.com/ilyaKarachun/library-management#oauth-20-authorization-protocol)  
+
 - [API Documentation](https://github.com/ilyaKarachun/library-management#api-documentation) 
 
 - [Database Documentation](https://github.com/ilyaKarachun/library-management#database-documentation)
@@ -40,7 +42,7 @@ Instructions:
 
 ## User Functionalities
 
-The system provides the following functionalities:
+The system will be used by the library managers (Users). It provides the following functionalities:
 
 ### ◻ Book Management
 - Add new books to the library with details like ISBN, title, author and publication year.
@@ -60,6 +62,20 @@ The system provides the following functionalities:
 
 ### ◻ Reports:
 - Generate reports such as a list of all books in the library, borrowed books, overdue books, and borrower records.
+
+<br>
+
+## OAuth 2.0 Authorization Protocol
+
+This system implements the OAuth 2.0 authentication flow.
+
+### OAuth 2.0 Flow
+1. The User fills a login form with his credentials (`email` and `password`).  
+
+2. The Client sends an authentication request with User's credentials to the following API's endpoint: `http://localhost:3000/login`.  
+3. The Server authenticates the User and generate a pair of Tokens (`Access Token` and `Refresh Token`). Token's value is an uuid random string. Access Token has an expiration time of 15 minutes. Refresh Tokens has an expiration time of 6 hours.
+4. The Server stores the Tokens in a Redis database, along with the User's `idUser` ID and User's `isAdmin` role. Finally, the Server sends the Tokens to the Client as HTTP Cookies.  
+5. The Client can then use the Access Token to authenticate and make requests to protected resources. If Access Token has expired, the Client can use the Refresh Token to obtain a new pair of Tokens. If Refresh Token has also expired, the Client must authenticate again with the User's login credentials. 
 
 <br>
 

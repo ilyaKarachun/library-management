@@ -3,9 +3,13 @@ import { BorrowerRepository } from '../repositories/borrowerRepository';
 import { BorrowerDTO } from '../dtos/borrowerDTO';
 
 
-
 export class BorrowerController{
-    private borrowerRepository = new BorrowerRepository();
+    private borrowerRepository: BorrowerRepository;
+
+    constructor(){
+        this.borrowerRepository = new BorrowerRepository();
+    }
+
     getBorrowers = async (req: Request, res: Response) => {
         try{
             const borrowers = await this.borrowerRepository.getAll();
@@ -20,6 +24,7 @@ export class BorrowerController{
             res.status(500).json({message: "error getting controller"});
         }
     };
+
     getBorrowerById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try{
@@ -36,6 +41,19 @@ export class BorrowerController{
             res.status(500).json({message: "error getting controller"});
         }
     };
+
+    getBorrowerByEmail = async (req: Request, res: Response) => {
+        const email = req.params.email;
+        try{
+            await this.borrowerRepository.getByEmail(email);
+            res.status(200).json({
+                message: 'Borrower retrieved successfully',
+            });
+        }catch(err){
+            res.status(500).json({message: "error getting controller"});
+        }
+    };
+
     updateBorrower = async (req: Request, res: Response) => {
         const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email);
         try{
@@ -49,7 +67,7 @@ export class BorrowerController{
     };
     
     createBorrower = async (req: Request, res: Response) => {
-        const borrower = new BorrowerDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email);
+        const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email, req.body.id);
         try{
             const result = await this.borrowerRepository.create(borrower);
             res.status(201).json({
@@ -60,6 +78,7 @@ export class BorrowerController{
             res.status(500).json({message: "error creating controller"});
         }
     };
+
     deleteBorrower = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try{
@@ -69,17 +88,6 @@ export class BorrowerController{
             });
         }catch(err){
             res.status(500).json({message: "error deleting controller"});
-        }
-    };
-    getBorrowerByEmail = async (req: Request, res: Response) => {
-        const email = req.params.email;
-        try{
-            await this.borrowerRepository.getByEmail(email);
-            res.status(200).json({
-                message: 'Borrower retrieved successfully',
-            });
-        }catch(err){
-            res.status(500).json({message: "error getting controller"});
         }
     };
 };

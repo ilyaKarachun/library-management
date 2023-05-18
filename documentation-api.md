@@ -25,6 +25,43 @@ Client must be authenticated to make any request.
 
 All responses are in JSON format.
 
+<br>
+
+### Authentication:
+
+- `POST /login` - User login.  
+  - Request:
+
+        Request-Body:
+          {
+            "email": "example@gmail.com",
+            "password": "password"
+          }
+  - Response:
+    
+        HTTP Status: 200 OK
+        Content-Type: application/JSON
+        { message: "Ok - logged in" }
+
+        Other possible HTTP Status: 
+          401 Unauthorized,
+          422 Unprocessable Entity,
+          404 Not found,
+          500 Internal Server Error
+
+- `GET /logout` - User logout.  
+  - Response:
+    
+        HTTP Status: 200 OK
+        Content-Type: application/JSON
+        { message: "Ok - logged out" }
+
+        Other possible HTTP Status: 
+          401 Unauthorized,
+          500 Internal Server Error
+
+<br>
+
 ### Books:
 
 - `POST /books` - Add new book.
