@@ -17,7 +17,6 @@ export class BookRepository {
         INSERT INTO books (ISBN, title, author_id, publication_year, is_available)
         VALUES ($1, $2, $3, $4, $5);
       `;
-      console.log();
       const bookValues = [
         newBook.ISBN,
         newBook.title,
@@ -42,7 +41,6 @@ export class BookRepository {
   `;
     try {
       const result = await pool.query(queryText);
-      console.log(result);
       return result.rows.map((row) => {
         const author = {
           firstName: row.first_name,
@@ -161,7 +159,6 @@ export class BookRepository {
     ];
 
     try {
-      console.log(queryText, values);
       await pool.query(queryText);
       return newBook;
     } catch (err) {
@@ -173,7 +170,6 @@ export class BookRepository {
   async delete(ISBN: string) {
     const queryText = `DELETE FROM books WHERE ISBN = '${ISBN}';`;
     try {
-      console.log(queryText);
 
       await pool.query(queryText);
       return `book with isbn ${ISBN} deleted`;

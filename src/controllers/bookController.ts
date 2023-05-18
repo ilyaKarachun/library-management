@@ -10,24 +10,8 @@ class BookController {
   }
   getBooks = async (req: Request, res: Response): Promise<void> => {
     try {
-      console.log("get books");
       const books = await this.bookRepository.getall();
       res.status(200).json(books);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Something broke!");
-    }
-  };
-
-  getBookById = async (req: Request, res: Response): Promise<void> => {
-    const id: number = Number(req.params.id);
-    try {
-      const book: BookDTO | null = await this.bookRepository.getById(id);
-      if (!book) {
-        res.status(404).send(`Book with ID ${id} not found`);
-      } else {
-        res.json(book);
-      }
     } catch (err) {
       console.error(err);
       res.status(500).send("Something broke!");
@@ -59,7 +43,6 @@ class BookController {
         year,
         isAvailable
       );
-      console.log(newBook);
 
       const createdBook: BookDTO | null = await this.bookRepository.create(
         newBook
@@ -76,7 +59,7 @@ class BookController {
   };
 
   putBook = async (req: Request, res: Response): Promise<void> => {
-    const isbn: number = Number(req.params.id);
+    const isbn: number = Number(req.params.isbn);
     const { ISBN, title, author, year, isAvailable }: BookDTO = req.body;
     const newBook = new BookDTO(ISBN, title, author, year, isAvailable);
     try {
