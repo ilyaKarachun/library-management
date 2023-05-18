@@ -1,5 +1,5 @@
 const {query} = require('../db/index');
-const {BorrowerDTO} = require('../dtos/borrowerDTO');
+import BorrowerDTO from '../dtos/borrowerDTO';
 
 export class BorrowerRepository{
     async getAll(){
@@ -32,11 +32,11 @@ export class BorrowerRepository{
     };
     create = async (newBorrower: BorrowerDTO) => {
         const queryText = 'INSERT INTO borrower (first_name, last_name, email) VALUES ($1, $2, $3) RETURNING id_borrower';
-        const values = [borrower.firstName, borrower.lastName, borrower.email];
+        const values = [newBorrower.firstName, newBorrower.lastName, newBorrower.email];
         try{
             const result = await query(queryText, values);
-            borrower.id = result.rows[0].borrower_id;
-            return borrower;
+            newBorrower.id = result.rows[0].borrower_id;
+            return newBorrower;
         }
         catch(err){
             throw new Error(`Error while creating borrower`);
@@ -44,7 +44,7 @@ export class BorrowerRepository{
     };
     update = async (newBorrower: BorrowerDTO) => {
         const queryText = 'UPDATE borrower SET first_name = $1, last_name = $2, email = $3 WHERE id_borrower = $4';
-        const values = [borrower.firstName, borrower.lastName, borrower.email, borrower.id];
+        const values = [newBorrower.firstName, newBorrower.lastName, newBorrower.email, newBorrower.id];
         try{
             await query(queryText, values);
             console.log("Borrower updated");
