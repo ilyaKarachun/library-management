@@ -8,9 +8,9 @@ const bookRep = new BookRepository();
 console.log(bookRep);
 
 router.get("/books", booksController.getBooks);
-router.get("/books/:id", booksController.getBookById);
+router.get("/books/:isbn", booksController.getBookByISBN);
 router.post("/books", booksController.postBook);
-router.put("/books/:id", booksController.putBook);
-router.delete("/books/:id", booksController.deleteBook);
+router.put("/books/:isbn", booksController.putBook);
+router.delete("/books/:isbn", booksController.deleteBook);
 
 export default router;

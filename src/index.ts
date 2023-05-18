@@ -1,6 +1,6 @@
 import express from "express";
 import bookRouter from "./routes/bookRouter";
-import { pool } from "./db/dbConntection";
+import { pool } from "./db/dbConnection";
 import { createTables } from "./db/migrations/createTables";
 import dotenv from "dotenv";
 
