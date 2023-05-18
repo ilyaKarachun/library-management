@@ -1,23 +1,23 @@
-import {BorrowersDTO} from './borrowersDTO';
+import {BorrowerDTO} from './borrowerDTO';
 class ReportBorrowersDTO{
-    borrowers: Array<BorrowersDTO>;
+    borrowers: Array<BorrowerDTO>;
     constructor(){
         this.borrowers = [];
     }
     //getter to return a copy of array of borrowers
-    getBorrowers(): Array<BorrowersDTO> {
+    getBorrowers(): Array<BorrowerDTO> {
         return this.borrowers.slice();
     }
     //setter to set the array of borrowers
-    setBorrowers(borrowers: Array<BorrowersDTO>): void {
+    setBorrowers(borrowers: Array<BorrowerDTO>): void {
         this.borrowers = borrowers;
     }
     //add a borrower to the array of borrowers
-    addBorrower(borrower: BorrowersDTO): void {
+    addBorrower(borrower: BorrowerDTO): void {
         this.borrowers.push(borrower);
     }
     //remove a borrower from the array of borrowers
-    removeBorrower(borrower: BorrowersDTO): void {
+    removeBorrower(borrower: BorrowerDTO): void {
         let index = this.borrowers.indexOf(borrower);
         this.borrowers.splice(index, 1);
     }
