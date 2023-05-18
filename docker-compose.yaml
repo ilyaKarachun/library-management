@@ -5,17 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      PGHOST: db
-      PGPORT: 5432
-      PGDATABASE: "library_managment"
-      PGUSER: "postgres"
-      PGPASSWORD: root
+    env_file:
+      - .env
     volumes:
       - .:/app
     ports:
       - 3000:3000
-
     depends_on:
       - db
 
@@ -24,9 +19,16 @@ services:
   db:
     image: postgres:latest
     restart: always
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: "library_managment"
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+    volumes:
+      - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+volumes:
+  db_data:

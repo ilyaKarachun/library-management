@@ -1,7 +1,7 @@
 import express from "express";
 import bookRouter from "./routes/bookRouter";
-import { pool } from "./dbConntection";
-import { createTables } from "./migrations/createTables";
+import { pool } from "./db/dbConntection";
+import { createTables } from "./db/migrations/createTables";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,7 +18,6 @@ app.listen(port, async () => {
     .then(() => console.log("connected to db"))
     .then(() => {
       createTables();
-      console.log(process.env);
       console.log(`tables created`);
     });
 });

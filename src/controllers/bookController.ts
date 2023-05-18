@@ -1,19 +1,17 @@
 import { Request, Response } from "express";
-import { pool } from "../dbConntection";
-import { QueryResult } from "../types/QueryResult";
+import { BookRepository } from "../repositories/bookRepository";
+import { BookDTO } from "../dtos/bookDTO";
 
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  published_year: number;
-}
+class BookController {
+  private bookRepository: BookRepository;
 
-export class BookController {
+  constructor() {
+    this.bookRepository = new BookRepository();
+  }
   async getBooks(req: Request, res: Response): Promise<void> {
     try {
-      const result: QueryResult<Book> = await pool.query("SELECT * FROM books");
-      res.json(result.rows);
+      const books = await this.bookRepository.getall();
+      res.status(200).json(books);
     } catch (err) {
       console.error(err);
       res.status(500).send("Something broke!");
@@ -23,14 +21,11 @@ export class BookController {
   async getBookById(req: Request, res: Response): Promise<void> {
     const id: number = Number(req.params.id);
     try {
-      const result: QueryResult<Book> = await pool.query(
-        "SELECT * FROM books WHERE id = $1",
-        [id]
-      );
-      if (result.rowCount === 0) {
+      const book: BookDTO | null = await this.bookRepository.getById(id);
+      if (!book) {
         res.status(404).send(`Book with ID ${id} not found`);
       } else {
-        res.json(result.rows[0]);
+        res.json(book);
       }
     } catch (err) {
       console.error(err);
@@ -38,34 +33,52 @@ export class BookController {
     }
   }
 
-  async postBook(req: Request, res: Response): Promise<void> {
+  async getBookByISBN(req: Request, res: Response): Promise<void> {
+    const isbn: string = String(req.params.isbn);
     try {
-      const { title, author, published_year }: Book = req.body;
-
-      const result: QueryResult<Book> = await pool.query(
-        "INSERT INTO books (title, author, published_year) VALUES ($1, $2, $3) RETURNING *",
-        [title, author, published_year]
-      );
-      res.status(201).json(result.rows[0]);
+      const book: BookDTO | null = await this.bookRepository.getByISBN(isbn);
+      if (!book) {
+        res.status(404).send(`Book with ID ${isbn} not found`);
+      } else {
+        res.json(book);
+      }
     } catch (err) {
       console.error(err);
       res.status(500).send("Something broke!");
     }
   }
 
+  postBook = async (req: Request, res: Response): Promise<void> => {
+    try {
+    
+      const { ISBN, title, author, year }: BookDTO = req.body;
+      const newBook: BookDTO = new BookDTO(ISBN, title, author, year, false);
+      const createdBook: BookDTO | null = await this.bookRepository.create(
+        newBook
+      );
+      if (!createdBook) {
+        res.status(500).send("Failed to create book");
+      } else {
+        res.status(201).json(createdBook);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Something broke!");
+    }
+  };
+
   async putBook(req: Request, res: Response): Promise<void> {
     const id: number = Number(req.params.id);
-    const { title, author, published_year }: Book = req.body;
-    console.log();
+    const { ISBN, title, author, year }: BookDTO = req.body;
+    const newBook = new BookDTO(ISBN, title, author, year, false);
     try {
-      const result: QueryResult<Book> = await pool.query(
-        "UPDATE books SET title = $1, author = $2, published_year = $3 WHERE id = $4 RETURNING *",
-        [title, author, published_year, id]
+      const updatedBook: BookDTO | null = await this.bookRepository.update(
+        newBook
       );
-      if (result.rowCount === 0) {
+      if (!updatedBook) {
         res.status(404).send(`Book with ID ${id} not found`);
       } else {
-        res.json(result.rows[0]);
+        res.json(updatedBook);
       }
     } catch (err) {
       console.error(err);
@@ -74,16 +87,13 @@ export class BookController {
   }
 
   async deleteBook(req: Request, res: Response): Promise<void> {
-    const id: number = Number(req.params.id);
+    const ISBN: string = String(req.params.isbn);
     try {
-      const result: QueryResult<Book> = await pool.query(
-        "DELETE FROM books WHERE id = $1 RETURNING *",
-        [id]
-      );
-      if (result.rowCount === 0) {
-        res.status(404).send(`Book with ID ${id} not found`);
+      const result: String = await this.bookRepository.delete(ISBN);
+      if (!result) {
+        res.status(404).send(`Book with ISBN ${ISBN} not found`);
       } else {
-        res.json({ message: `Book with id ${id} deleted` });
+        res.json({ message: `${result}` });
       }
     } catch (err) {
       console.error(err);
@@ -91,3 +101,5 @@ export class BookController {
     }
   }
 }
+
+export default BookController;
