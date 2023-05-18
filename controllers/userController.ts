@@ -4,25 +4,30 @@ import  UserDTO  from '../dtos/userDTO';
 
 
 export class UserController {
+
     private userRepo = new UserRepository();
+
     getUsers = async (req: Request, res: Response) => {
         try {
-            const users = await this.userRepo.getAll();
-            if (!users) {
+            const users: UserDTO[] = await this.userRepo.getAll();
+            if (!users.length) {
                 res.status(404).json({ message: 'No users found' });
+            } else {
+                res.status(200).json({
+                    data: users,
+                    message: 'Users retrieved successfully',
+                });
             }
-            res.status(200).json({
-                data: users,
-                message: 'Users retrieved successfully',
-            });
         } catch (err) {
-            res.status(500).json({ message: "error getting users" });
+            res.status(500).json({ message: 'Error getting users' });
         }
     };
+    
+
     createUser = async (req: Request, res: Response) => {
         const user = new UserDTO(req.body.id, req.body.firstName, req.body.lastName, req.body.email, req.body.hashed_pass);
         try {
-            const result = await this.userRepo.create(user);
+            const result: UserDTO = await this.userRepo.create(user);
             res.status(201).json({
                 data: result,
                 message: 'User created successfully',
@@ -31,22 +36,24 @@ export class UserController {
             res.status(500).json({ message: "error creating user" });
         }
     };
+
     getUserById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try {
-            const user = await this.userRepo.getById(id);
+            const user: UserDTO | null = await this.userRepo.getById(id);
             if (!user) {
                 res.status(404).json({ message: 'No user found' });
+            } else {
+                res.status(200).json({
+                    data: user,
+                    message: 'User retrieved successfully',
+                });
             }
-            res.status(200).json({
-                data: user,
-                message: 'User retrieved successfully',
-            });
-        }
-        catch (err) {
-            res.status(500).json({ message: "error getting user" });
+        } catch (err) {
+            res.status(500).json({ message: 'Error getting user' });
         }
     };
+    
     updateUser = async (req: Request, res: Response) => {
         try {
             const { id_user, first_name, last_name, email, hashed_pass } = req.body;
@@ -59,8 +66,9 @@ export class UserController {
         }
 
     };
+    
     deleteUser = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
+        const id: number = parseInt(req.params.id);
         try {
             await this.userRepo.delete(id);
             res.status(200).json({ message: 'User deleted successfully' });

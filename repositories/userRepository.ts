@@ -1,4 +1,4 @@
-const { query } = require('./db/db');
+import  query  from '../db/db';
 import UserDTO from '../dtos/userDTO';
 
 export class UserRepository {
