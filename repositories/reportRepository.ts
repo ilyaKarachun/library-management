@@ -1,7 +1,8 @@
 import query from "../db/db";
 import {BookDTO} from "../dtos/bookDTO";
-import { BorrowerDTO } from "../dto/borrowerDTO";
+import {BorrowerDTO} from "../dtos/borrowerDTO";
 import ReportBookDTO from "../dtos/reportBookDTO";
+import ReportBorrowersDTO from "../dtos/reportBorrowersDTO";
 
 
 
