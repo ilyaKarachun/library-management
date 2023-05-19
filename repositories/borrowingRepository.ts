@@ -35,7 +35,39 @@ export class BorrowingRepository{
             await query(queryText, values); 
         }
         catch(err){
-            throw new Error(`Error while setting availability`);
+            throw new Error(`Error while setting availability: ${err.message}`);
+        }
+    };
+    async getBorrowingHistory(id: number){
+        const queryText = 'SELECT bb.isbn, bb.borrowing_date, bb.due_date, returned_date FROM books_borrowers bb INNER JOIN borrowers b ON bb.borrower_id = b.borrower_id WHERE b.borrower_id = $1';
+        const values = [id];
+        try{
+            const result = await query(queryText, values);
+            const history: BorrowingDTO[] = []
+            result.rows.forEach((row) => {
+                const borrowing = new BorrowingDTO(row.isbn, row.borrowing_date, row.due_date, row.returned_date);
+                history.push(borrowing);
+            });
+            return history;
+        }
+        catch(err){
+            throw new Error(`Error while getting borrower history: ${err.message}`);
+        }
+    };
+    async getBorrowerDueDates(id: number){
+        const queryText = 'SELECT bb.isbn, bb.borrowing_date, bb.due_date FROM books_borrowers bb INNER JOIN borrowers b ON bb.borrower_id = b.borrower_id WERE b.borrower_id = $1 AND bb.returned_date IS NULL';
+        const values = [id];
+        try{
+            const result = await query(queryText, values);
+            const dueDates: BorrowingDTO[] = []
+            result.rows.forEach((row) => {
+                const borrowing = new BorrowingDTO(row.isbn, row.borrowing_date, row.due_date, row.returned_date);
+                dueDates.push(borrowing);
+            });
+            return dueDates;
+        }
+        catch(err){
+            throw new Error(`Error while getting borrower due dates: ${err.message}`);
         }
     };
 }
