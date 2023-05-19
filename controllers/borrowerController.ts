@@ -12,8 +12,8 @@ export class BorrowerController{
 
     getBorrowers = async (req: Request, res: Response) => {
         try{
-            const borrowers = await this.borrowerRepository.getAll();
-            if (!borrowers) {
+            const borrowers: BorrowerDTO[] = await this.borrowerRepository.getAll();
+            if (!borrowers.length) {
                 res.status(404).json({message: 'No borrowers found'});
             }
             res.status(200).json({
@@ -28,7 +28,7 @@ export class BorrowerController{
     getBorrowerById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try{
-            const borrower = await this.borrowerRepository.getById(id);
+            const borrower: BorrowerDTO | null = await this.borrowerRepository.getById(id);
             if(!borrower){
                 res.status(404).json({message: 'No borrower found'});
             }
@@ -45,8 +45,9 @@ export class BorrowerController{
     getBorrowerByEmail = async (req: Request, res: Response) => {
         const email = req.params.email;
         try{
-            await this.borrowerRepository.getByEmail(email);
+            const borrower: BorrowerDTO | null = await this.borrowerRepository.getByEmail(email);
             res.status(200).json({
+                data: borrower,
                 message: 'Borrower retrieved successfully',
             });
         }catch(err){
@@ -80,7 +81,7 @@ export class BorrowerController{
     };
 
     deleteBorrower = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
+        const id: number = parseInt(req.params.id);
         try{
             await this.borrowerRepository.delete(id);
             res.status(200).json({

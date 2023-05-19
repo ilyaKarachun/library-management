@@ -43,3 +43,4 @@ export class BorrowerDTO {
         this._email = email;
     }
 }
+export default BorrowerDTO;
