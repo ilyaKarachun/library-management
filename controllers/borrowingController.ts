@@ -18,7 +18,7 @@ export class BorrowingController{
                 return res.status(422).json({ error: "Missing required fields: ISBN, borrower ID or due date"})
             }
 
-            //this.borrowingRepository.checkout()
+            //this.borrowingRepository.borrow()
 
         } catch(err) {
             res.status(500).json({ error: "Internal server error" });
