@@ -24,4 +24,32 @@ export class BorrowingController{
             res.status(500).json({ error: "Internal server error" });
         }
     }
+    public async checkAvailability(req: Request, res: Response) {
+        try {
+            const { ISBN } = req.body;
+
+            if(!ISBN){
+                return res.status(422).json({ error: "Missing required field: ISBN"})
+            }
+
+            this.borrowingRepository.checkAvailability(ISBN);
+
+        } catch(err) {
+            res.status(500).json({ error: "Internal server error" });
+        }
+    };
+    public async setAvailability(req: Request, res: Response) {
+        try {
+            const { ISBN, isAvailable } = req.body;
+
+            if(!ISBN || !isAvailable){
+                return res.status(422).json({ error: "Missing required fields: ISBN or isAvailable"})
+            }
+
+            this.borrowingRepository.setAvailability(ISBN, isAvailable);
+
+        } catch(err) {
+            res.status(500).json({ error: "Internal server error" });
+        }
+    };
 }

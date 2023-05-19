@@ -6,6 +6,4 @@ const router = Router();
 const borrowingController = new BorrowingController();
 
 router.post('/borrowings', authenticate, borrowingController.borrow);
-
-
 export default router;
