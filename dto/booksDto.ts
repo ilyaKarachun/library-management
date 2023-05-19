@@ -1,4 +1,4 @@
-export class BooksRecord {
+export class BooksDto {
     title: string;
     author: string;
     publicationYear: number;
