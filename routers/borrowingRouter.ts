@@ -5,7 +5,7 @@ import { authenticate } from '../middlewares/authMiddleware';
 const router = Router();
 const borrowingController = new BorrowingController();
 
-router.post('/borrowings/checkout', authenticate, borrowingController.checkout);
+router.post('/borrowings', authenticate, borrowingController.borrow);
 
 
 export default router;

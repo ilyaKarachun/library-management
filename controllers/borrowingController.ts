@@ -10,7 +10,7 @@ export class BorrowingController{
         this.borrowingRepository = new BorrowingRepository();
     }
 
-    public async checkout(req: Request, res: Response) {    
+    public async borrow(req: Request, res: Response) {    
         try {
             const { ISBN, borrowerId, dueDate } = req.body;
 
