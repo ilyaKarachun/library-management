@@ -1,4 +1,4 @@
-{ 
+{
   "scripts": {
     "build": "docker-compose build",
     "docker": "docker-compose up",
