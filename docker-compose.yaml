@@ -13,6 +13,7 @@ services:
       - 3000:3000
     depends_on:
       - db
+      - redis
 
     command: sh -c "npm install && npm start"
 
@@ -30,5 +31,16 @@ services:
     ports:
       - "5432:5432"
 
+  redis:
+    container_name: ${REDIS_HOST}
+    image: redis
+    env_file:
+      - .env
+    expose:
+      - ${REDIS_PORT}
+    volumes:
+      - "redis_data:/data"
+
 volumes:
+  redis_data:
   db_data:
