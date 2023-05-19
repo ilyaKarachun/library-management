@@ -1,4 +1,5 @@
 import {BorrowerDTO} from './borrowerDTO';
+
 class ReportBorrowersDTO{
     borrowers: Array<BorrowerDTO>;
     constructor(){
