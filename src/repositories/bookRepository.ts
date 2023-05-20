@@ -1,5 +1,5 @@
 import { pool } from "../db/dbConnection";
-import { BookDTO } from "../dtos/bookDTO";
+import BookDTO from "../dtos/bookDTO";
 
 export class BookRepository {
   async create(newBook: BookDTO): Promise<BookDTO | null> {

@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import { BorrowerRepository } from '../repositories/borrowerRepository';
-import { BorrowerDTO } from '../dtos/borrowerDTO';
+import BorrowerDTO from '../dtos/borrowerDTO';
 
 
 export class BorrowerController{

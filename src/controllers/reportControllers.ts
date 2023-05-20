@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { BookDTO } from '../dtos/bookDTO';
+import BookDTO from '../dtos/bookDTO';
 import ReportBookDTO from '../dtos/reportBookDTO';
 import ReportBorrowersDTO from '../dtos/reportBorrowersDTO';
 import { ReportRepository } from '../repositories/reportRepository';

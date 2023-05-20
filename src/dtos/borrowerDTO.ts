@@ -1,4 +1,4 @@
-export class BorrowerDTO {
+class BorrowerDTO {
     private _id?: number;
     private _firstName: string;
     private _lastName: string;
@@ -43,4 +43,5 @@ export class BorrowerDTO {
         this._email = email;
     }
 }
+
 export default BorrowerDTO;

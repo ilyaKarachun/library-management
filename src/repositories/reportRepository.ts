@@ -1,6 +1,6 @@
 import { pool } from "../db/dbConnection";
-import {BookDTO} from "../dtos/bookDTO";
-import {BorrowerDTO} from "../dtos/borrowerDTO";
+import BookDTO from "../dtos/bookDTO";
+import BorrowerDTO from "../dtos/borrowerDTO";
 import ReportBookDTO from "../dtos/reportBookDTO";
 import ReportBorrowersDTO from "../dtos/reportBorrowersDTO";
 
