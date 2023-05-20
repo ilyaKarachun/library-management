@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BookRepository } from "../repositories/bookRepository";
-import { BookDTO } from "../dtos/bookDTO";
+import BookDTO from "../dtos/bookDTO";
 
 class BookController {
   private bookRepository: BookRepository;

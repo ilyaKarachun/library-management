@@ -1,4 +1,4 @@
-export class BookDTO {
+class BookDTO {
     private _ISBN: string;
     private _title: string;
     private _author: {firstName: string, lastName: string};
@@ -53,3 +53,5 @@ export class BookDTO {
         this._isAvailable = isAvailable;
     }
 }
+
+export default BookDTO;
