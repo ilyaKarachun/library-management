@@ -12,18 +12,49 @@ export class BorrowingController {
 
     public async borrow(req: Request, res: Response) {
         try {
-            const { ISBN, borrowerId, dueDate } = req.body;
+            const {
+                ISBN,
+                borrowerId,
+                dueDate,
+            }: { ISBN: string; borrowerId: string; dueDate: string } = req.body;
 
-            if (!ISBN || !borrowerId || !dueDate) {
-                return res.status(422).json({ error: "Missing required fields: ISBN, borrower ID or due date" })
-            }
+            if (!ISBN || !borrowerId || !dueDate)
+                return res.status(422).json({ error: "Missing required fields: ISBN, borrower ID or due date" });
 
-            //this.borrowingRepository.borrow()
+            if (new Date(dueDate) < new Date())
+                return res.status(422).json({ error: "Due date must be in the future" });
+
+            if (!(await this.borrowingRepository.checkAvailability(ISBN)))
+                return res.status(404).json({ error: "Book is not available" });
+
+            this.borrowingRepository.borrow(ISBN, borrowerId, new Date(dueDate))
+
+            return res.json({ message: "Book borrowed successfully" });
 
         } catch (err) {
             res.status(500).json({ error: "Internal server error" });
         }
     }
+
+    public async return(req: Request, res: Response) {
+        try {
+            const { ISBN } = req.body;
+
+            if (!ISBN)
+                return res.status(422).json({ error: "Missing required fields: ISBN" });
+
+            if (await this.borrowingRepository.checkAvailability(ISBN))
+                return res.status(404).json({ error: "Book is not borrowed" });
+
+            this.borrowingRepository.return(ISBN);
+
+            return res.json({ message: "Book returned successfully" });
+
+        } catch (err) {
+            res.status(500).json({ error: "Internal server error" });
+        }
+    }
+
     public async checkAvailability(req: Request, res: Response) {
         try {
             const { ISBN } = req.body;
