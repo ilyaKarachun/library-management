@@ -32,7 +32,7 @@ CREATE TABLE borrowers (
 );
 
 CREATE TABLE books_borrowers (
-    ISBN char(13) NOT NULL UNIQUE,
+    ISBN char(13) NOT NULL,
     borrower_id integer NOT NULL,
     borrowing_date timestamp DEFAULT NOW(),
     due_date timestamp NOT NULL,
