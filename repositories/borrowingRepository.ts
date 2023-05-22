@@ -39,7 +39,7 @@ export class BorrowingRepository{
         }
     };
     async getBorrowingHistory(id: number){
-        const queryText = 'SELECT bb.isbn, bb.borrowing_date, bb.due_date, returned_date FROM books_borrowers bb INNER JOIN borrowers b ON bb.borrower_id = b.borrower_id WHERE b.borrower_id = $1';
+        const queryText = 'SELECT bb.isbn, bb.borrowing_date, bb.due_date, returned_date FROM books_borrowers WERE borrower_id = $1';
         const values = [id];
         try{
             const result = await query(queryText, values);
@@ -55,7 +55,7 @@ export class BorrowingRepository{
         }
     };
     async getBorrowerDueDates(id: number){
-        const queryText = 'SELECT bb.isbn, bb.borrowing_date, bb.due_date FROM books_borrowers bb INNER JOIN borrowers b ON bb.borrower_id = b.borrower_id WERE b.borrower_id = $1 AND bb.returned_date IS NULL';
+        const queryText = 'SELECT isbn, borrowing_date, due_date FROM books_borrowers WERE borrower_id = $1 AND returned_date IS NULL';
         const values = [id];
         try{
             const result = await query(queryText, values);
