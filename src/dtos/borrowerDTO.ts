@@ -14,7 +14,6 @@ class BorrowerDTO {
     get id(): number | undefined {
         return this._id;
     }
-
     set id(id: number | undefined) {
         this._id = id;
     }
@@ -22,7 +21,6 @@ class BorrowerDTO {
     get firstName(): string {
         return this._firstName;
     }
-
     set firstName(firstName: string) {
         this._firstName = firstName;
     }
@@ -30,7 +28,6 @@ class BorrowerDTO {
     get lastName(): string {
         return this._lastName;
     }
-
     set lastName(lastName: string) {
         this._lastName = lastName;
     }
@@ -38,7 +35,6 @@ class BorrowerDTO {
     get email(): string {
         return this._email;
     }
-
     set email(email: string) {
         this._email = email;
     }

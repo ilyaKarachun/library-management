@@ -1,46 +1,51 @@
 class UserDTO {
-    private _user_id: number;
-    private _first_name: string;
-    private _last_name: string;
+    private _id: number | null;
+    private _firstName: string;
+    private _lastName: string;
     private _email: string;
-    private _hashed_pass: string;
+    private _hashedPass?: string;
 
-    constructor(user_id: number, first_name: string, last_name: string, email: string, hashed_pass: string) {
-        this._user_id = user_id;
-        this._first_name = first_name;
-        this._last_name = last_name;
+    constructor(id: number | null, firstName: string, lastName: string, email: string, hashedPass?: string){
+        this._id = id;
+        this._firstName = firstName;
+        this._lastName = lastName;
         this._email = email;
-        this._hashed_pass = hashed_pass;
+        this._hashedPass = hashedPass;
     }
-    get user_id(): number {
-        return this._user_id;
+
+    get id(): number | null {
+        return this._id;
     }
-    set user_id(user_id: number) {
-        this._user_id = user_id;
+    set id(id: number | null) {
+        this._id = id;
     }
-    get first_name(): string {
-        return this._first_name;
+    
+    get firstName(): string {
+        return this._firstName;
     }
-    set first_name(first_name: string) {
-        this._first_name = first_name;
+    set firstName(firstName: string) {
+        this._firstName = firstName;
     }
-    get last_name(): string {
-        return this._last_name;
+
+    get lastName(): string {
+        return this._lastName;
     }
-    set last_name(last_name: string) {
-        this._last_name = last_name;
+    set lastName(lastName: string) {
+        this._lastName = lastName;
     }
+
     get email(): string {
         return this._email;
     }
     set email(email: string) {
         this._email = email;
     }
-    get hashed_pass(): string {
-        return this._hashed_pass;
+
+    get hashedPass(): string | undefined {
+        return this._hashedPass;
     }
-    set hashed_pass(hashed_pass: string) {
-        this._hashed_pass = hashed_pass;
+    set hashedPass(hashedPass: string | undefined) {
+        this._hashedPass = hashedPass;
     }
 
 }

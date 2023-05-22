@@ -1,13 +1,14 @@
 import express from "express";
 import BookController from "../controllers/bookController";
+import { authenticate } from '../middlewares/authMiddleware';
 
 const booksController = new BookController();
 const router = express.Router();
 
-router.get("/books", booksController.getBooks);
-router.get("/books/:isbn", booksController.getBookByISBN);
-router.post("/books", booksController.postBook);
-router.put("/books/:isbn", booksController.putBook);
-router.delete("/books/:isbn", booksController.deleteBook);
+router.get("/books", authenticate, booksController.getBooks);
+router.get("/books/:isbn", authenticate, booksController.getBookByISBN);
+router.post("/books", authenticate, booksController.postBook);
+router.put("/books/:isbn", authenticate, booksController.putBook);
+router.delete("/books/:isbn", authenticate, booksController.deleteBook);
 
 export default router;

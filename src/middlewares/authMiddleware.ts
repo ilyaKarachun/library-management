@@ -11,7 +11,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
 
             if(accessTokenData){    //accessToken is valid
                 const {userId} = accessTokenData;
-                //req.body.userId = userId; //id of the user that is making the request - not sure if we need it
+                req.body.requestId = userId; //id of the user that is making the request
                 return next();
             }
 
@@ -21,7 +21,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
             if(refreshTokenData){   //refreshToken is valid
                 const {userId} = refreshTokenData;
                 const newTokens = await refreshTokens(refreshToken, userId);
-                //req.body.userId = userId;
+                req.body.requestId = userId;
                 res = setTokenCookies(res, newTokens);
                 return next();
             }
