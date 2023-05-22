@@ -46,7 +46,7 @@ export class BorrowingRepository{
     };
     async getBorrowingHistory(id: number){
         const client = await pool.connect();
-        const queryText = 'SELECT bb.isbn, bb.borrowing_date, bb.due_date, returned_date FROM books_borrowers WERE borrower_id = $1';
+        const queryText = 'SELECT isbn, borrowing_date, due_date, returned_date FROM books_borrowers WHERE borrower_id = $1';
         const values = [id];
         try{
             const result = await client.query(queryText, values);
