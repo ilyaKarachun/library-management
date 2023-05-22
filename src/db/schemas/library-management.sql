@@ -41,3 +41,5 @@ CREATE TABLE books_borrowers (
     CONSTRAINT fk_ISBN FOREIGN KEY (ISBN) REFERENCES books (ISBN) ON DELETE CASCADE,
     CONSTRAINT fk_borrower_id FOREIGN KEY (borrower_id) REFERENCES borrowers (borrower_id) ON DELETE CASCADE
 );
+
+INSERT INTO users (first_name, last_name, email, hashed_pass) VALUES ('Super', 'Admin', 'admin@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$e4zmdelJfs8MVbwKHS2F/Q$SqKg6llKogZQQdYVXBqaRkGJlNojvem1y7bWiJZmeLs');

@@ -47,6 +47,10 @@ export class UserController {
     createUser = async (req: Request, res: Response) => {
         const { firstName, lastName, email, password } = req.body;
 
+        if(parseInt(req.body.requestId) !== 1){
+            return res.status(403).json({ error: "Forbidden - This request requires Admin permission." });
+        }
+
         if(!firstName || !lastName || !email || !password) {
             return res.status(422).json({ error: "Missing or invalid user information." });
         }
@@ -69,8 +73,8 @@ export class UserController {
         try {
             const { id, firstName, lastName, email } = req.body;
 
-            if(id !==  req.body.requestId){
-                return res.status(403).json({ error: "Forbidden - This resource can only be accessed by its owner." });
+            if(parseInt(req.body.requestId) !== 1 && parseInt(req.body.requestId) !== parseInt(id) ){
+                return res.status(403).json({ error: "Forbidden - This resource can only be accessed by its owner or the Admin." });
             }
 
             if(!id || !firstName || !lastName || !email) {
@@ -89,8 +93,8 @@ export class UserController {
     updateUserPassword = async (req: Request, res: Response) => {
         const {id, oldPassword, newPassword} = req.body;
 
-        if(id !==  req.body.requestId){
-            return res.status(403).json({ error: "Forbidden - This resource can only be accessed by its owner." });
+        if(parseInt(req.body.requestId) !== 1 && parseInt(req.body.requestId) !== parseInt(id) ){
+            return res.status(403).json({ error: "Forbidden - This resource can only be accessed by its owner or the Admin." });
         }
     
         if(!id || !oldPassword || !newPassword) {
@@ -118,8 +122,8 @@ export class UserController {
     deleteUser = async (req: Request, res: Response) => {
         const id: number = parseInt(req.params.id);
 
-        if(id !==  req.body.requestId){
-            return res.status(403).json({ error: "Forbidden - This resource can only be accessed by its owner." });
+        if(parseInt(req.body.requestId) !== 1 && parseInt(req.body.requestId) !== id ){
+            return res.status(403).json({ error: "Forbidden - This resource can only be accessed by its owner or the Admin." });
         }
 
         try {
