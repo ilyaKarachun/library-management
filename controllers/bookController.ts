@@ -39,7 +39,9 @@ class BookController {
 
   postBook = async (req: Request, res: Response): Promise<void> => {
     try {
+      console.log(req.body);
       const { ISBN, title, author, year, isAvailable }: BookDTO = req.body;
+
       const newBook: BookDTO = new BookDTO(
         ISBN,
         title,
