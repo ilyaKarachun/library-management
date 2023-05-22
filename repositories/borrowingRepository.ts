@@ -1,6 +1,5 @@
 import { isBindingName } from 'typescript';
-import  query  from '../db/db'
-import { BorrowingDTO } from '../dtos/borrowingDTO';
+
 
 export class BorrowingRepository{
     async borrow(){
