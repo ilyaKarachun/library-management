@@ -1,11 +1,11 @@
-export class BookDTO {
+class BookDTO {
     private _ISBN: string;
     private _title: string;
     private _author: {firstName: string, lastName: string};
     private _year: number;
-    private _isAvailable: boolean;
+    private _isAvailable?: boolean;
 
-    constructor(ISBN: string, title: string, author: {firstName: string, lastName: string}, year: number, isAvailable: boolean){
+    constructor(ISBN: string, title: string, author: {firstName: string, lastName: string}, year: number, isAvailable?: boolean){
         this._ISBN = ISBN;
         this._title = title;
         this._author = author;
@@ -45,11 +45,13 @@ export class BookDTO {
         this._year = year;
     }
 
-    get isAvailable(): boolean {
+    get isAvailable(): boolean | undefined {
         return this._isAvailable;
     }
 
-    set isAvailable(isAvailable: boolean) {
+    set isAvailable(isAvailable: boolean | undefined) {
         this._isAvailable = isAvailable;
     }
 }
+
+export default BookDTO;

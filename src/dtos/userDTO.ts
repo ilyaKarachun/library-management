@@ -1,23 +1,25 @@
-class BorrowerDTO {
-    private _id?: number;
+class UserDTO {
+    private _id: number | null;
     private _firstName: string;
     private _lastName: string;
     private _email: string;
+    private _hashedPass?: string;
 
-    constructor(firstName: string, lastName: string, email: string, id?: number){
+    constructor(id: number | null, firstName: string, lastName: string, email: string, hashedPass?: string){
         this._id = id;
         this._firstName = firstName;
         this._lastName = lastName;
         this._email = email;
+        this._hashedPass = hashedPass;
     }
 
-    get id(): number | undefined {
+    get id(): number | null {
         return this._id;
     }
-    set id(id: number | undefined) {
+    set id(id: number | null) {
         this._id = id;
     }
-
+    
     get firstName(): string {
         return this._firstName;
     }
@@ -38,6 +40,13 @@ class BorrowerDTO {
     set email(email: string) {
         this._email = email;
     }
-}
 
-export default BorrowerDTO;
+    get hashedPass(): string | undefined {
+        return this._hashedPass;
+    }
+    set hashedPass(hashedPass: string | undefined) {
+        this._hashedPass = hashedPass;
+    }
+
+}
+export default UserDTO;
