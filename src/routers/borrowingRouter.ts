@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { BorrowingController } from '../controllers/borrowingController';
+//import { BorrowingController } from '../controllers/borrowingController';
 import { authenticate } from '../middlewares/authMiddleware';
 
 const router = Router();
-const borrowingController = new BorrowingController();
+//const borrowingController = new BorrowingController();
 
-router.post('/borrowings', authenticate, borrowingController.borrow);
-
+//router.post('/borrowings', authenticate, borrowingController.borrow);
 
 export default router;
+
+// commented until merge with branch that contains function checkAvailability

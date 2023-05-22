@@ -5,14 +5,14 @@ import { parseCookies } from '../utils/cookieParserUtil';
 import { generateTokens, storeTokens, setTokenCookies, deleteTokenCookies, deleteToken } from '../utils/oauthTokensUtil';
 
 
-export class AuthController{
+export class AuthController {
     private userRepository: UserRepository;
 
     constructor(){
         this.userRepository = new UserRepository();
     }
 
-    public async login(req: Request, res: Response) {
+    login = async (req: Request, res: Response) => {
         const {email, password} = req.body;
     
         if (!email || !password) {
@@ -44,7 +44,7 @@ export class AuthController{
         }
     }
     
-    public async logout(req: Request, res: Response){
+    logout = async (req: Request, res: Response) => {
         try {
             if(req.headers.cookie){
                 const { accessToken, refreshToken } = parseCookies(req.headers.cookie);

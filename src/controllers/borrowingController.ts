@@ -10,7 +10,7 @@ export class BorrowingController{
         this.borrowingRepository = new BorrowingRepository();
     }
 
-    public async borrow(req: Request, res: Response): Promise<Response> {    
+    borrow = async (req: Request, res: Response): Promise<Response> => {    
         try {
             const { borrowerId, dueDate, ISBNs } = req.body;
 

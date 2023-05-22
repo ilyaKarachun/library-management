@@ -9,7 +9,7 @@ export class UserRepository {
             return result.rows.map((row) => new UserDTO(row.user_id, row.first_name, row.last_name, row.email));
         }
         catch (err) {
-            throw new Error(`Error while getting users: ${err.message}`);
+            throw new Error(`Error while getting users`);
         }
     };
 
@@ -33,6 +33,7 @@ export class UserRepository {
     async getCredentials(email: string): Promise<{id: number, email: string, hashedPass: string} | null> {
         const queryText = 'SELECT user_id, email, hashed_pass FROM users WHERE email = $1';
         const values = [email];
+
         try {
             const result = await pool.query(queryText, values);
             if (result.rows.length > 0) {
@@ -46,7 +47,7 @@ export class UserRepository {
         catch (err) {
             throw new Error(`Error while getting user credentials`);
         }
-    };
+    }
 
     async getHashedPass(id: number): Promise<string | null> {
         const queryText = 'SELECT hashed_pass FROM users WHERE user_id = $1';
@@ -70,6 +71,7 @@ export class UserRepository {
         try {
             const result = await pool.query(queryText, values);
             user.id = result.rows[0].user_id;
+            user.hashedPass = undefined;
             return user;
         }
         catch (err) {

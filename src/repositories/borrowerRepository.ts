@@ -10,7 +10,7 @@ export class BorrowerRepository{
             return result.rows.map((row)=> new BorrowerDTO(row.first_name, row.last_name, row.email, row.borrower_id));
         }
         catch(err){
-            throw new Error(`Error while getting borrowers: ${err.message}`);
+            throw new Error(`Error while getting borrowers`);
         }
         
     };
@@ -30,6 +30,7 @@ export class BorrowerRepository{
         }
         return null;
     };
+
     async getByEmail(email: string){
         const queryText = 'SELECT first_name, last_name, email FROM borrowers WHERE email = $1';
         const values = [email];
@@ -45,8 +46,9 @@ export class BorrowerRepository{
         }
         return null;
     };
+    
     create = async (newBorrower: BorrowerDTO) => {
-        const queryText = 'INSERT INTO borrower (first_name, last_name, email) VALUES ($1, $2, $3) RETURNING id_borrower';
+        const queryText = 'INSERT INTO borrowers (first_name, last_name, email) VALUES ($1, $2, $3) RETURNING borrower_id';
         const values = [newBorrower.firstName, newBorrower.lastName, newBorrower.email];
         try{
             const result = await pool.query(queryText, values);
@@ -57,12 +59,12 @@ export class BorrowerRepository{
             throw new Error(`Error while creating borrower`);
         }
     };
+
     update = async (newBorrower: BorrowerDTO) => {
-        const queryText = 'UPDATE borrower SET first_name = $1, last_name = $2, email = $3 WHERE id_borrower = $4';
+        const queryText = 'UPDATE borrowers SET first_name = $1, last_name = $2, email = $3 WHERE borrower_id = $4';
         const values = [newBorrower.firstName, newBorrower.lastName, newBorrower.email, newBorrower.id];
         try{
             await pool.query(queryText, values);
-            console.log("Borrower updated");
         }catch(err){
             throw new Error(`Error while updating borrower`);
         }
@@ -73,7 +75,6 @@ export class BorrowerRepository{
         const values = [id];
         try{
             await pool.query(queryText, values);
-            console.log("Borrower deleted");
         }catch(err){
             throw new Error(`Error while deleting borrower`);
         }

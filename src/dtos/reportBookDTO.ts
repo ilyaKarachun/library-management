@@ -1,4 +1,4 @@
-import {BookDTO} from "./bookDTO";
+import BookDTO from "./bookDTO";
 
 class ReportBookDTO {
     books: Array<BookDTO>;

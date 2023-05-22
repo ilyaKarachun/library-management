@@ -8,91 +8,68 @@ class BookController {
   constructor() {
     this.bookRepository = new BookRepository();
   }
-  getBooks = async (req: Request, res: Response): Promise<void> => {
+  
+  getBooks = async (req: Request, res: Response): Promise<Response> => {
     try {
       const books: BookDTO[] = await this.bookRepository.getall();
-      if (!books) {
-        res.status(404).send(`books table is empty`);
-      } else {
-        res.status(200).json(books);
+      if (!books.length) {
+        return res.status(404).json({ error: `books table is empty`});
       }
+
+      return res.status(200).json(books);
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Something broke!");
+      return res.status(500).json({ error: "Something broke!"});
     }
   };
 
-  getBookByISBN = async (req: Request, res: Response): Promise<void> => {
+  getBookByISBN = async (req: Request, res: Response): Promise<Response> => {
     const isbn: string = String(req.params.isbn);
     try {
       const book: BookDTO | null = await this.bookRepository.getByISBN(isbn);
       if (!book) {
-        res.status(404).send(`Book with ID ${isbn} not found`);
+        return res.status(404).json({ error: `Book with ID ${isbn} not found`});
       } else {
-        res.status(200).json(book);
+        return res.status(200).json(book);
       }
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Something broke!");
+      return res.status(500).json({ error: "Something broke!"});
     }
   };
 
-  postBook = async (req: Request, res: Response): Promise<void> => {
+  postBook = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const { ISBN, title, author, year, isAvailable }: BookDTO = req.body;
-      const newBook: BookDTO = new BookDTO(
-        ISBN,
-        title,
-        author,
-        year,
-        isAvailable
-      );
+      const { ISBN, title, author, year }: BookDTO = req.body;
+      const newBook: BookDTO = new BookDTO(ISBN, title, author, year);
 
-      const createdBook: BookDTO | null = await this.bookRepository.create(
-        newBook
-      );
+      const createdBook: BookDTO | null = await this.bookRepository.create(newBook);
       if (!createdBook) {
-        res.status(500).send("Failed to create book");
+        return res.status(500).json({ error: "Failed to create book"});
       } else {
-        res.status(201).json(createdBook);
+        return res.status(201).json(createdBook);
       }
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Something broke!");
+      return res.status(500).json({ error: "Something broke!"});
     }
   };
 
-  putBook = async (req: Request, res: Response): Promise<void> => {
-    const isbn: string = String(req.params.isbn);
-    const { ISBN, title, author, year, isAvailable }: BookDTO = req.body;
-    const newBook = new BookDTO(ISBN, title, author, year, isAvailable);
+  putBook = async (req: Request, res: Response): Promise<Response> => {
+    const { ISBN, title, author, year }: BookDTO = req.body;
+    const newBook = new BookDTO(ISBN, title, author, year);
     try {
-      const updatedBook: BookDTO | null = await this.bookRepository.update(
-        newBook
-      );
-      if (!updatedBook) {
-        res.status(404).send(`Book with ibsn ${isbn} not found`);
-      } else {
-        res.status(200).json(updatedBook);
-      }
+      await this.bookRepository.update(newBook);
+      return res.status(200).json(newBook);
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Something broke!");
+      return res.status(500).json({ error: "Something broke!"});
     }
   };
 
-  deleteBook = async (req: Request, res: Response): Promise<void> => {
+  deleteBook = async (req: Request, res: Response): Promise<Response> => {
     const ISBN: string = String(req.params.isbn);
     try {
-      const result: string = await this.bookRepository.delete(ISBN);
-      if (!result) {
-        res.status(404).send(`Book with ISBN ${ISBN} not found`);
-      } else {
-        res.status(204).json({ message: `${result}` });
-      }
+      await this.bookRepository.delete(ISBN);
+        return res.status(200).json({ message: 'Book deleted' });
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Something broke!");
+      return res.status(500).json({ error: "Something broke!"});
     }
   };
 }

@@ -1,4 +1,4 @@
-import {BorrowerDTO} from './borrowerDTO';
+import BorrowerDTO from './borrowerDTO';
 
 class ReportBorrowersDTO{
     borrowers: Array<BorrowerDTO>;

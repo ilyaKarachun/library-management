@@ -14,14 +14,15 @@ export class BorrowerController{
         try{
             const borrowers: BorrowerDTO[] = await this.borrowerRepository.getAll();
             if (!borrowers.length) {
-                res.status(404).json({message: 'No borrowers found'});
+                return res.status(404).json({message: 'No borrowers found'});
             }
-            res.status(200).json({
+
+            return res.status(200).json({
                 data: borrowers,
-                message: 'Borrowers retrieved successfully',
+                message: 'Borrowers retrieved successfully'
             });
         }catch(err){
-            res.status(500).json({message: "error getting controller"});
+            return res.status(500).json({ error: "Internal server error" });
         }
     };
 
@@ -30,15 +31,16 @@ export class BorrowerController{
         try{
             const borrower: BorrowerDTO | null = await this.borrowerRepository.getById(id);
             if(!borrower){
-                res.status(404).json({message: 'No borrower found'});
+                return res.status(404).json({message: 'No borrower found'});
             }
-            res.status(200).json({
+
+            return res.status(200).json({
                 data: borrower,
-                message: 'Borrower retrieved successfully',
+                message: 'Borrower retrieved successfully'
             });
         }
         catch(err){
-            res.status(500).json({message: "error getting controller"});
+            return res.status(500).json({ error: "Internal server error" });
         }
     };
 
@@ -46,37 +48,39 @@ export class BorrowerController{
         const email = req.params.email;
         try{
             const borrower: BorrowerDTO | null = await this.borrowerRepository.getByEmail(email);
-            res.status(200).json({
+            if(!borrower){
+                return res.status(404).json({message: 'No borrower found'});
+            }
+
+            return res.status(200).json({
                 data: borrower,
-                message: 'Borrower retrieved successfully',
+                message: 'Borrower retrieved successfully'
             });
         }catch(err){
-            res.status(500).json({message: "error getting controller"});
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    };
+
+    createBorrower = async (req: Request, res: Response) => {
+        const borrower: BorrowerDTO = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email);
+        try{
+            const result = await this.borrowerRepository.create(borrower);
+            return res.status(201).json({
+                data: result,
+                message: 'Borrower created successfully'
+            });
+        }catch(err){
+            return res.status(500).json({ error: "Internal server error" });
         }
     };
 
     updateBorrower = async (req: Request, res: Response) => {
-        const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email);
-        try{
-            await this.borrowerRepository.update(borrower);
-            res.status(200).json({
-                message: 'Borrower updated successfully',
-            });
-        }catch(err){
-            res.status(500).json({message: "error updating controller"});
-        }
-    };
-    
-    createBorrower = async (req: Request, res: Response) => {
         const borrower = new BorrowerDTO(req.body.firstName, req.body.lastName, req.body.email, req.body.id);
         try{
-            const result = await this.borrowerRepository.create(borrower);
-            res.status(201).json({
-                data: result,
-                message: 'Borrower created successfully',
-            });
+            await this.borrowerRepository.update(borrower);
+            return res.status(200).json({ message: 'Borrower updated successfully' });
         }catch(err){
-            res.status(500).json({message: "error creating controller"});
+            return res.status(500).json({ error: "Internal server error" });
         }
     };
 
@@ -84,11 +88,9 @@ export class BorrowerController{
         const id: number = parseInt(req.params.id);
         try{
             await this.borrowerRepository.delete(id);
-            res.status(200).json({
-                message: 'Borrower deleted successfully',
-            });
+            return res.status(200).json({ message: 'Borrower deleted successfully' });
         }catch(err){
-            res.status(500).json({message: "error deleting controller"});
+            return res.status(500).json({ error: "Internal server error" });
         }
     };
 };

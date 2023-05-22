@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   app:
+    container_name: app
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,6 +19,7 @@ services:
     command: sh -c "npm install && npm start"
 
   db:
+    container_name: db
     image: postgres:latest
     restart: always
     env_file:
@@ -28,6 +30,7 @@ services:
       POSTGRES_DB: ${PG_DATABASE}
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./src/db/schemas/library-management.sql:/docker-entrypoint-initdb.d/library-management.sql
     ports:
       - "5432:5432"
 
