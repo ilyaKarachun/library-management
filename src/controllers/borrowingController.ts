@@ -52,7 +52,7 @@ export class BorrowingController{
         try {
             const borrowerId: number = parseInt(req.query.borrowerId as string, 10);
             if (isNaN(borrowerId)) {
-                return res.status(400).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
+                return res.status(422).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
             }
             const history: BorrowingDTO[] = await this.borrowingRepository.getBorrowingHistory(borrowerId);
             if (!history.length) {
@@ -70,7 +70,7 @@ export class BorrowingController{
         try {
             const borrowerId: number = parseInt(req.query.borrowerId as string, 10);
             if (isNaN(borrowerId)) {
-                return res.status(400).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
+                return res.status(422).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
             }
             const dueDates: BorrowingDTO[] = await this.borrowingRepository.getBorrowerDueDates(borrowerId);
             if (!dueDates.length) {
@@ -81,7 +81,7 @@ export class BorrowingController{
                 message: 'Due dates retrieved successfully',
             });
         } catch (err) {
-            res.status(500).json({ error: `Error retrieving due dates: ${err.message}` });
+            res.status(500).json({ error: `Error retrieving due dates` });
         }
     };
 }

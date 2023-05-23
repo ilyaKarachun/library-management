@@ -95,5 +95,8 @@ To see Entity-Relationship Diagram, tables, relationships and all the details ab
 
   - [Node JS](https://nodejs.org/) - JavaScript runtime environment.
   - [Express](http://expressjs.com/) - Web framework for Node JS.
+  - [TypeScript](https://www.typescriptlang.org/) - Typed programming language built on JavaScript.
   - [Docker](https://www.docker.com/) - Used to create docker containers for App and DB services.
   - [PostgreSQL](https://www.postgresql.org/) - SQL relational database used to persist data.
+  - [Redis](https://redis.io/) - In-memory database used to store OAuth 2.0 Tokens.
+  - [OAuth 2.0](https://oauth.net/2/) - Authorization Protocol.
