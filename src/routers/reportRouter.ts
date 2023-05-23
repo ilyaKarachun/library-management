@@ -6,9 +6,7 @@ const reportController = new ReportController();
 
 const router = Router();
 
-router.get('/reports/books', authenticate, reportController.getAllBooks);
 router.get('/reports/borrowed', authenticate, reportController.getAllBorrowedBooks);
-router.get('/reports/borrowers', authenticate, reportController.getAllBorrowers);
 router.get('/reports/overdue', authenticate, reportController.getAllOverdueBooks);
 
 export default router;
