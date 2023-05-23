@@ -10,27 +10,22 @@ export class BorrowingController{
         this.borrowingRepository = new BorrowingRepository();
     }
 
-    borrow = async (req: Request, res: Response): Promise<Response> => {    
+    public async borrow(req: Request, res: Response) { 
         try {
-            const { borrowerId, dueDate, ISBNs } = req.body;
-
-            if(!borrowerId || !dueDate || !ISBNs || ISBNs.length === 0){
-                return res.status(422).json({ error: "Missing required fields: borrower ID, due date or ISBNs"});
-            }
-
-            for(const ISBN of ISBNs){
-                const isAvailable = await this.borrowingRepository.checkAvailability(ISBN);
-                if(!isAvailable){
-                    return res.status(404).json({ error: `Book ISBN: ${ISBN} not available for borrow`});
-                }
-            }
-
-            await this.borrowingRepository.borrow(borrowerId, dueDate, ISBNs);
-            return res.status(201).json({ messsage: "Borrowing/s created"});
+            
         } catch(err) {
             return res.status(500).json({ error: "Internal server error" });
         }
     }
+
+    public async return(req: Request, res: Response) {
+        try {
+            
+        } catch(err) {
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    }
+
     public async checkAvailability(req: Request, res: Response) {
         try {
             const ISBN: string = req.query.ISBN as string;
@@ -46,13 +41,13 @@ export class BorrowingController{
         } catch (err) {
             res.status(500).json({ error: "Internal server error" });
         }
-    };
+    }
     
     public async getBorrowingHistory(req: Request, res: Response) {
         try {
             const borrowerId: number = parseInt(req.query.borrowerId as string, 10);
             if (isNaN(borrowerId)) {
-                return res.status(400).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
+                return res.status(422).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
             }
             const history: BorrowingDTO[] = await this.borrowingRepository.getBorrowingHistory(borrowerId);
             if (!history.length) {
@@ -65,12 +60,13 @@ export class BorrowingController{
         } catch (err) {
             res.status(500).json({ error: "Internal server error" });
         }
-    };
+    }
+
     public async borrowerDueDates(req: Request, res: Response) {
         try {
             const borrowerId: number = parseInt(req.query.borrowerId as string, 10);
             if (isNaN(borrowerId)) {
-                return res.status(400).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
+                return res.status(422).json({ error: 'Invalid request. Invalid or missing borrowerId field.' });
             }
             const dueDates: BorrowingDTO[] = await this.borrowingRepository.getBorrowerDueDates(borrowerId);
             if (!dueDates.length) {
@@ -81,7 +77,7 @@ export class BorrowingController{
                 message: 'Due dates retrieved successfully',
             });
         } catch (err) {
-            res.status(500).json({ error: `Error retrieving due dates: ${err.message}` });
+            res.status(500).json({ error: `Error retrieving due dates` });
         }
-    };
+    }
 }

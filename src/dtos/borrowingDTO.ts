@@ -1,16 +1,25 @@
 export class BorrowingDTO {
+    private _id: number;
     private _ISBN: string;
     private _borrowerId: number;
     private _borrowingDate: string | null;
     private _dueDate: string;
     private _returnedDate?: string;
 
-    constructor(ISBN: string, borrowerId: number, borrowingDate: string | null, dueDate: string, returnedDate?: string){
+    constructor(id: number, ISBN: string, borrowerId: number, borrowingDate: string | null, dueDate: string, returnedDate?: string){
+        this._id = id;
         this._ISBN = ISBN;
         this._borrowerId = borrowerId;
         this._borrowingDate = borrowingDate;
         this._dueDate = dueDate;
         this._returnedDate = returnedDate;
+    }
+
+    get id(): number {
+        return this._id;
+    }
+    set id(id: number) {
+        this._id = id;
     }
 
     get ISBN(): string {

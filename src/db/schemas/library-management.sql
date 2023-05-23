@@ -32,12 +32,12 @@ CREATE TABLE borrowers (
 );
 
 CREATE TABLE books_borrowers (
+    borrowing_id SERIAL PRIMARY KEY,
     ISBN char(13) NOT NULL,
     borrower_id integer NOT NULL,
     borrowing_date timestamp DEFAULT NOW(),
     due_date timestamp NOT NULL,
     returned_date timestamp,
-    CONSTRAINT pk_books_borrowers PRIMARY KEY (ISBN, borrower_id),
     CONSTRAINT fk_ISBN FOREIGN KEY (ISBN) REFERENCES books (ISBN) ON DELETE CASCADE,
     CONSTRAINT fk_borrower_id FOREIGN KEY (borrower_id) REFERENCES borrowers (borrower_id) ON DELETE CASCADE
 );

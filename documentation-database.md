@@ -32,7 +32,7 @@ This documentation provides an overview of the database structure, including the
 
 *(Open the image for better visualization)*
 
-![ERD](https://i.imgur.com/C2ZmiyK.png)
+![ERD](https://i.imgur.com/agn1baC.png)
 
 <br>
 
@@ -90,15 +90,15 @@ As it can be seen in the diagrams, this database has 4 entities: Users (library 
 
 ### Books_Borrowers
 
-| Column             | Data Type |
-| ------------------ | ----------|
-| ISBN `PFK`         | char(13)  |
-| borrower_id `PFK`  | integer   |
-| borrowing_date     | timestamp |
-| due_date           | timestamp |
-| returned_date      | timestamp |
+| Column            | Data Type |
+| ----------------- | ----------|
+| borrowing_id `PK` | SERIAL    |
+| ISBN `FK`         | char(13)  |
+| borrower_id `FK`  | integer   |
+| borrowing_date    | timestamp |
+| due_date          | timestamp |
+| returned_date     | timestamp |
 
-- `{ISBN, borrower_id}`: Composite Key for the table.
 - `borrowing_date`: Date on which the book was borrowed from the library.
 - `due_date`: Date on which the book must be returned to the library.
 - `returned_date`: Date on which the borrower returned the book to the library.

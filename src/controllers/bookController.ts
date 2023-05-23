@@ -36,6 +36,20 @@ class BookController {
     }
   };
 
+  getBookByTitle = async (req: Request, res: Response): Promise<Response> => {
+    const title: string = String(req.params.title);
+    try {
+      const book: BookDTO | null = await this.bookRepository.getByTitle(title);
+      if (!book) {
+        return res.status(404).json({ error: `Book with title '${title}' not found`});
+      } else {
+        return res.status(200).json(book);
+      }
+    } catch (err) {
+      return res.status(500).json({ error: "Something broke!"});
+    }
+  };
+
   postBook = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { ISBN, title, author, year }: BookDTO = req.body;
