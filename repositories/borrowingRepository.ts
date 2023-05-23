@@ -4,29 +4,37 @@ import { BorrowingDTO } from '../dtos/borrowingDTO';
 
 export class BorrowingRepository {
 	async borrow(ISBN: string, borrowerId: string, dueDate: Date) {
+		const client = await query.connect()
+
         try {
-            await query("BEGIN")
-            await query("INSERT INTO books_borrowers (isbn, borrower_id, borrowing_date, due_date) VALUES ($1, $2, $3, $4)", [ISBN, borrowerId, new Date(), dueDate])
-            await query("UPDATE books SET is_available = false WHERE isbn = $1", [ISBN])
-            await query("COMMIT")
+            await client.query("BEGIN")
+            await client.query("INSERT INTO books_borrowers (isbn, borrower_id, borrowing_date, due_date) VALUES ($1, $2, $3, $4)", [ISBN, borrowerId, new Date(), dueDate])
+            await client.query("UPDATE books SET is_available = false WHERE isbn = $1", [ISBN])
+            await client.query("COMMIT")
 
         } catch (err) {
-            await query("ROLLBACK")
+            await client.query("ROLLBACK")
 			throw new Error("Error while borrowing")
+		} finally {
+			client.release()
 		}
     }
     
-    async return(ISBN: string) {
+	async return(ISBN: string) {
+		const client = await query.connect()
+
         try {
-            await query("BEGIN")
-            await query("UPDATE books_borrowers SET returned_date = $1 WHERE isbn = $2", [new Date(), ISBN])
-            await query("UPDATE books SET is_available = true WHERE isbn = $1", [ISBN])
-            await query("COMMIT")
+            await client.query("BEGIN")
+            await client.query("UPDATE books_borrowers SET returned_date = $1 WHERE isbn = $2", [new Date(), ISBN])
+            await client.query("UPDATE books SET is_available = true WHERE isbn = $1", [ISBN])
+            await client.query("COMMIT")
 
         } catch (err) {
-            await query("ROLLBACK")
+            await client.query("ROLLBACK")
             throw new Error("Error while returning")
-        }
+        } finally {
+			client.release()
+		}
     }
 
 	async checkAvailability(ISBN: string) {
