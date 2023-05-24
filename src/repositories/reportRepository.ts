@@ -1,34 +1,7 @@
 import { pool } from "../db/dbConnection";
 import BookDTO from "../dtos/bookDTO";
-import BorrowerDTO from "../dtos/borrowerDTO";
-import ReportBookDTO from "../dtos/reportBookDTO";
-import ReportBorrowersDTO from "../dtos/reportBorrowersDTO";
-
 
 export class ReportRepository{
-
-    getAllBooks = async () => {
-        const queryText = `
-            SELECT b.ISBN, b.title, a.first_name, a.last_name, b.publication_year, b.is_available 
-            FROM books b
-            INNER JOIN authors a 
-            ON b.author_id = a.author_id
-            ORDER BY b.ISBN;
-        `;
-        try {
-            const result = await pool.query(queryText);
-            const reportAllBooks = new ReportBookDTO();
-            result.rows.forEach((row) => {
-                const author = {firstName: row.first_name, lastName: row.last_name};
-                const book = new BookDTO(row.isbn, row.title, author, row.year, row.is_available);
-                reportAllBooks.addBook(book);
-            });
-            return reportAllBooks;
-        }
-        catch (err) {
-            throw new Error('Error while getting books');
-        }
-    }; 
 
     getAllBorrowed = async () => {
         const queryText = `
@@ -41,11 +14,11 @@ export class ReportRepository{
         `;
         try {
             const result = await pool.query(queryText);
-            const reportBorrowedBooks = new ReportBookDTO();
+            const reportBorrowedBooks = new Array<BookDTO>();
             result.rows.forEach((row) => {
                 const author = {firstName: row.first_name, lastName: row.last_name};
                 const book = new BookDTO(row.isbn, row.title, author, row.year, row.is_available);
-                reportBorrowedBooks.addBook(book);
+                reportBorrowedBooks.push(book);
             });
             return reportBorrowedBooks;
         }
@@ -53,23 +26,7 @@ export class ReportRepository{
             throw new Error(`Error while getting books`);
         }
     };  
-
-    getAllBorrowers = async () => {
-        const queryText = 'SELECT * FROM borrowers';
-        try {
-            const result = await pool.query(queryText);
-            const reportBorrower = new ReportBorrowersDTO();
-            result.rows.forEach((row) => {
-                const borrower = new BorrowerDTO(row.first_name, row.last_name, row.email, row.borrower_id);
-                reportBorrower.addBorrower(borrower);
-            });
-            return reportBorrower;
-        }
-        catch (err) {
-            throw new Error(`Error while getting borrowers`);
-        }
-    };
-    
+  
     getAllOverdue = async () => {
         const queryText = `
             SELECT bb.ISBN, b.title, a.first_name, a.last_name, b.publication_year, b.is_available 
@@ -79,14 +36,15 @@ export class ReportRepository{
             INNER JOIN authors a
             ON b.author_id = a.author_id
             WHERE bb.due_date < NOW()
+            AND bb.returned_date IS NULL
         `;
         try {
             const result = await pool.query(queryText);
-            const reportOverdueBooksDTO = new ReportBookDTO();
+            const reportOverdueBooksDTO = new Array<BookDTO>();
             result.rows.forEach((row) => {
                 const author = {firstName: row.first_name, lastName: row.last_name};
                 const book = new BookDTO(row.isbn, row.title, author, row.year, row.is_available);
-                reportOverdueBooksDTO.addBook(book);
+                reportOverdueBooksDTO.push(book);
             });
             return reportOverdueBooksDTO;
         }
