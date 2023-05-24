@@ -21,11 +21,8 @@ async function storeTokens(tokens: {accessToken: string, refreshToken: string}, 
             { EX: accessTokenExpiration }
         );
         
-            console.log("test")
 
         await redisClient.expire(tokens.accessToken, accessTokenExpiration);
-
-        console.log("test2")
 
         await redisClient.set(
             tokens.refreshToken,
@@ -33,11 +30,7 @@ async function storeTokens(tokens: {accessToken: string, refreshToken: string}, 
             { EX: refreshTokenExpiration }
         );
 
-        console.log("test3")
-
         await redisClient.expire(tokens.refreshToken, refreshTokenExpiration);
-
-        console.log("test4")
 
     } catch (error) {
         console.error(`Error storing tokens in Redis: ${error}`);
