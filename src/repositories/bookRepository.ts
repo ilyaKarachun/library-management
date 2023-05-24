@@ -2,33 +2,6 @@ import { pool } from "../db/dbConnection";
 import BookDTO from "../dtos/bookDTO";
 
 export class BookRepository {
-  async create(newBook: BookDTO): Promise<BookDTO | null> {
-    const client = await pool.connect();
-
-    try {
-      await client.query('BEGIN');
-      
-      const authorQuery = 'INSERT INTO authors (first_name, last_name) VALUES ($1, $2) RETURNING author_id;';
-      const authorValues = [newBook.author.firstName, newBook.author.lastName];
-      const authorResult = await pool.query(authorQuery, authorValues);
-      const authorId = authorResult.rows[0].author_id;
-
-      const bookQuery = 'INSERT INTO books (ISBN, title, author_id, publication_year) VALUES ($1, $2, $3, $4);';
-      const bookValues = [newBook.ISBN, newBook.title, authorId, newBook.year];
-      await pool.query(bookQuery, bookValues);
-
-      await client.query('COMMIT');
-
-      newBook.isAvailable = true;
-      return newBook;
-    } catch (error) {
-      client.query('ROLLBACK');
-      throw new Error("Error while trying to create a book");
-    } finally {
-      client.release();
-    }
-  }
-
   async getall(): Promise<BookDTO[]> {
     const queryText = `
     SELECT b.ISBN, b.title, a.first_name, a.last_name, b.publication_year, b.is_available 
@@ -114,6 +87,44 @@ export class BookRepository {
       );
     } catch (error) {
       throw new Error(`Error while trying to get book by title: ${title}`);
+    }
+  }
+
+  async create(newBook: BookDTO): Promise<BookDTO | null> {
+    const client = await pool.connect();
+
+    try {
+      const book: BookDTO | null = await this.getByISBN(newBook.ISBN);
+      if(book){
+        return null;
+      }
+
+      await client.query('BEGIN');
+      let authorId;
+
+      const authorIdQuery = 'SELECT author_id FROM authors WHERE first_name = $1 AND last_name = $2';
+      const authorValues = [newBook.author.firstName, newBook.author.lastName];
+      let authorResult = await client.query(authorIdQuery, authorValues);
+
+      if(!authorResult.rows || !authorResult.rows.length){
+        const authorCreateQuery = 'INSERT INTO authors (first_name, last_name) VALUES ($1, $2) RETURNING author_id;';
+        authorResult = await client.query(authorCreateQuery, authorValues);
+      }
+      authorId = authorResult.rows[0].author_id;
+
+      const bookQuery = 'INSERT INTO books (ISBN, title, author_id, publication_year) VALUES ($1, $2, $3, $4);';
+      const bookValues = [newBook.ISBN, newBook.title, authorId, newBook.year];
+      await client.query(bookQuery, bookValues);
+
+      await client.query('COMMIT');
+
+      newBook.isAvailable = true;
+      return newBook;
+    } catch (error) {
+      client.query('ROLLBACK');
+      throw new Error("Error while trying to create a book");
+    } finally {
+      client.release();
     }
   }
 
