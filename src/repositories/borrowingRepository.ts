@@ -1,5 +1,5 @@
-import { pool } from "../db/dbConnection";
-import { BorrowingDTO } from '../dtos/borrowingDTO';
+import { pool } from "../db/dbConnection"
+import { BorrowingDTO } from "../dtos/borrowingDTO"
 
 export class BorrowingRepository {
 	async borrow(ISBN: string, borrowerId: string, dueDate: Date) {
@@ -30,7 +30,7 @@ export class BorrowingRepository {
 		try {
 			await client.query("BEGIN")
 			await client.query(
-				"UPDATE books_borrowers SET returned_date = $1 WHERE isbn = $2",
+				"UPDATE books_borrowers SET returned_date = $1 WHERE borrowing_id = (SELECT bb.borrowing_idFROM books_borrowers bbWHERE bb.isbn = $2ORDER BY bb.borrowing_date DESC LIMIT 1);",
 				[new Date(), ISBN]
 			)
 			await client.query(
