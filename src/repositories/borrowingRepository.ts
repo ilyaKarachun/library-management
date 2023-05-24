@@ -30,7 +30,7 @@ export class BorrowingRepository {
 		try {
 			await client.query("BEGIN")
 			await client.query(
-				"UPDATE books_borrowers SET returned_date = $1 WHERE borrowing_id = (SELECT bb.borrowing_idFROM books_borrowers bbWHERE bb.isbn = $2ORDER BY bb.borrowing_date DESC LIMIT 1);",
+				"UPDATE books_borrowers SET returned_date = $1 WHERE borrowing_id = (SELECT bb.borrowing_id FROM books_borrowers bb WHERE bb.isbn = $2 ORDER BY bb.borrowing_date DESC LIMIT 1);",
 				[new Date(), ISBN]
 			)
 			await client.query(
