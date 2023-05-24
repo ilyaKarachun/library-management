@@ -36,6 +36,7 @@ export class ReportRepository{
             INNER JOIN authors a
             ON b.author_id = a.author_id
             WHERE bb.due_date < NOW()
+            AND bb.return_date IS NULL
         `;
         try {
             const result = await pool.query(queryText);
