@@ -8,6 +8,7 @@ beforeAll(async () => {
 		.post("/login")
 		.send(adminCredentials)
 	cookie = response.headers["set-cookie"]
+	console.log(cookie, adminCredentials)
 })
 
 const borrowerData: {
@@ -183,4 +184,12 @@ describe("DELETE /borrowers/:id", () => {
 
 	it("should return 200 even if borrower doesn't exist", async () =>
 		supertest(baseUrl).delete(url).set("Cookie", cookie).expect(200))
+})
+
+describe("GET /borrowers", () => {
+	const url = "/borrowers"
+
+	it("should return 401 if user is not logged in", async () => supertest(baseUrl).get(url).expect(401))
+
+	it("should return 200 if user is logged in", async () => supertest(baseUrl).get(url).set("Cookie", cookie).expect(200))
 })

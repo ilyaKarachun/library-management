@@ -57,7 +57,7 @@ class BookController {
 
       const createdBook: BookDTO | null = await this.bookRepository.create(newBook);
       if (!createdBook) {
-        return res.status(500).json({ error: "Failed to create book"});
+        return res.status(409).json({ error: "Book already exists"});
       } else {
         return res.status(201).json(createdBook);
       }
@@ -81,7 +81,7 @@ class BookController {
     const ISBN: string = String(req.params.isbn);
     try {
       await this.bookRepository.delete(ISBN);
-        return res.status(200).json({ message: 'Book deleted' });
+      return res.status(204).json({message:'204 book deleted'})
     } catch (err) {
       return res.status(500).json({ error: "Something broke!"});
     }
