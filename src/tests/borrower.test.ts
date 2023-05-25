@@ -42,3 +42,23 @@ describe("POST /borrowers", () => {
 	
 	
 })
+
+describe("DELETE /borrowers/:id", () => {
+	let url = "/borrowers/"
+
+	beforeAll(async () => {
+		url += borrowerData.id
+	})
+
+	it("should return 401 if user is not logged in", async () =>
+		supertest(baseUrl).delete(url).expect(401))
+
+	it("should return 200", async () =>
+		supertest(baseUrl).delete(url).set("Cookie", cookie).expect(200))
+
+	it("should delete borrower", async () =>
+		supertest(baseUrl).get(url).set("Cookie", cookie).expect(404))
+
+	it("should return 200 even if borrower doesn't exist", async () =>
+		supertest(baseUrl).delete(url).set("Cookie", cookie).expect(200))
+})
