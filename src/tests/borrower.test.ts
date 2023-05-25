@@ -8,7 +8,6 @@ beforeAll(async () => {
 		.post("/login")
 		.send(adminCredentials)
 	cookie = response.headers["set-cookie"]
-	console.log(cookie, adminCredentials)
 })
 
 const borrowerData: {
@@ -22,16 +21,6 @@ const borrowerData: {
 	lastName: "Doe",
 	email: "john.doe" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
 }
-
-describe("GET /borrowers", () => {
-	const url = "/borrowers"
-
-	it("should return 401 if user is not logged in", async () =>
-		supertest(baseUrl).get(url).expect(401))
-
-	it("should return 200 if user is logged in", async () =>
-		supertest(baseUrl).get(url).set("Cookie", cookie).expect(200))
-})
 
 describe("POST /borrowers", () => {
 	const url = "/borrowers"
@@ -58,6 +47,16 @@ describe("POST /borrowers", () => {
 			.set("Cookie", cookie)
 			.send(borrowerData)
 			.expect(409))
+})
+
+describe("GET /borrowers", () => {
+	const url = "/borrowers"
+
+	it("should return 401 if user is not logged in", async () =>
+		supertest(baseUrl).get(url).expect(401))
+
+	it("should return 200 if user is logged in", async () =>
+		supertest(baseUrl).get(url).set("Cookie", cookie).expect(200))
 })
 
 describe("GET /borrowers/email/:email", () => {
