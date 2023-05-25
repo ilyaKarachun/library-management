@@ -86,12 +86,12 @@ describe("POST /users", () => {
 
 	// ISSUE: Currently returns 500
 
-	// it("should return 409 if user already exists", async () =>
-	// 	supertest(baseUrl)
-	// 		.post(url)
-	// 		.set("Cookie", cookie)
-	// 		.send(userData)
-	// 		.expect(409))
+	it("should return 409 if user already exists", async () =>
+		supertest(baseUrl)
+			.post(url)
+			.set("Cookie", cookie)
+			.send(userData)
+			.expect(409))
 })
 
 describe("GET /users/:id", () => {
@@ -294,13 +294,12 @@ describe("DELETE /users/:id", () => {
 		supertest(baseUrl).delete(url).set("Cookie", userCookie).expect(403))
 
 	it("should return 200 if user exists", async () =>
-		supertest(baseUrl)
-			.delete(url)
-			.set("Cookie", cookie)
-			.expect(200))
+		supertest(baseUrl).delete(url).set("Cookie", cookie).expect(200))
 
 	it("should delete user", async () => {
-		const response = await supertest(baseUrl).get("/users/").set("Cookie", cookie)
+		const response = await supertest(baseUrl)
+			.get("/users/")
+			.set("Cookie", cookie)
 		const user = response.body.data.find(
 			(user: {
 				_id: number
@@ -314,8 +313,5 @@ describe("DELETE /users/:id", () => {
 	})
 
 	it("should return 200 even if user doesn't exists", async () =>
-		supertest(baseUrl)
-			.delete(url)
-			.set("Cookie", cookie)
-			.expect(200))
+		supertest(baseUrl).delete(url).set("Cookie", cookie).expect(200))
 })

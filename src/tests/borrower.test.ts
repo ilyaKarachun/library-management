@@ -51,14 +51,12 @@ describe("POST /borrowers", () => {
 			.set("Cookie", cookie)
 			.expect(200))
 
-	// ISSUE: Currently returns 500
-
-	// it("should return 409 if borrower already exists", async () =>
-	// 	supertest(baseUrl)
-	// 		.post(url)
-	// 		.set("Cookie", cookie)
-	// 		.send(borrowerData)
-	// 		.expect(409))
+	it("should return 409 if borrower already exists", async () =>
+		supertest(baseUrl)
+			.post(url)
+			.set("Cookie", cookie)
+			.send(borrowerData)
+			.expect(409))
 })
 
 describe("GET /borrowers/email/:email", () => {
