@@ -3,107 +3,114 @@ import { baseUrl, adminCredentials } from "./"
 
 let cookie: string
 
+const borrowerData: {
+	id: null | number
+	firstName: string
+	lastName: string
+	email: string
+} = {
+	id: null,
+	firstName: "Test",
+	lastName: "Boi",
+	email: "testboi@gmail.com",
+}
+
+const bookData = {
+	ISBN: "KMS1234567890",
+	title: "Test Boi Book",
+	author: { firstName: "Joe", lastName: "Mama" },
+	year: 2022,
+	isAvailable: true,
+}
+
 beforeAll(async () => {
 	const response = await supertest(baseUrl)
 		.post("/login")
 		.send(adminCredentials)
 	cookie = response.headers["set-cookie"]
+
+	await supertest(baseUrl)
+		.post("/borrowers")
+		.set("Cookie", cookie)
+		.send(borrowerData)
+
+	const allBorrowersResponse = await supertest(baseUrl)
+		.get("/borrowers")
+		.set("Cookie", cookie)
+
+	const borrower = allBorrowersResponse.body.data.find(
+		(borrower: {
+			_id: number
+			_firstName: string
+			_lastName: string
+			_email: string
+		}) => borrower._email === borrowerData.email
+	)
+
+	if (borrower) borrowerData.id = borrower._id
+
+	await supertest(baseUrl).post("/books").set("Cookie", cookie).send(bookData)
 })
 
-// ISSUE: Cannot create books
+describe("GET /reports/borrowed", () => {
+	beforeAll(async () => {
+		await supertest(baseUrl)
+			.post("/borrowings")
+			.set("Cookie", cookie)
+			.send({
+				ISBN: bookData.ISBN,
+				borrowerId: borrowerData.id,
+				dueDate: new Date(Date.now() + 1000000000)
+					.toISOString()
+					.split("T")[0],
+			})
+	})
 
-// describe("GET /reports/books", () => {
-// 	const url = "/reports/books"
+	it("should return 401 if not authenticated", async () => {
+		await supertest(baseUrl).get("/reports/borrowed").expect(401)
+	})
 
-// 	beforeAll(async () => {
-// 		await supertest(baseUrl).post("/books").set("Cookie", cookie).send({
-// 			ISBN: "9999",
-// 			title: "Test Book 1",
-// 			author: "Me",
-// 			year: 2023,
-// 		})
-// 		await supertest(baseUrl).post("/books").set("Cookie", cookie).send({
-// 			ISBN: "9998",
-// 			title: "Test Book 2",
-// 			author: "Me",
-// 			year: 2023,
-// 		})
-// 	})
+	it("should return 200 if authenticated", async () => {
+		await supertest(baseUrl)
+			.get("/reports/borrowed")
+			.set("Cookie", cookie)
+			.expect(200)
+	})
+})
 
-// 	it("should return 401 if user is not logged in", async () =>
-// 		supertest(baseUrl).get(url).expect(401))
+describe("GET /reports/overdue", () => {
+	beforeAll(async () => {
+		await supertest(baseUrl)
+			.post("/borrowings")
+			.set("Cookie", cookie)
+			.send({
+				ISBN: bookData.ISBN,
+				borrowerId: borrowerData.id,
+				dueDate: new Date(Date.now() - 1000000000)
+					.toISOString()
+					.split("T")[0],
+			})
+	})
 
-// 	it("should return 200", async () =>
-// 		supertest(baseUrl)
-// 			.get(url)
-// 			.set("Cookie", cookie)
-// 			.expect(200)
-// 			.expect({ data: [] }))
+	it("should return 401 if not authenticated", async () => {
+		await supertest(baseUrl).get("/reports/overdue").expect(401)
+	})
 
-// 	afterAll(async () => {
-// 		await supertest(baseUrl).delete("/books/9999").set("Cookie", cookie)
-// 		await supertest(baseUrl).delete("/books/9998").set("Cookie", cookie)
-// 	})
-// })
+	it("should return 200 if authenticated", async () => {
+		await supertest(baseUrl)
+			.get("/reports/overdue")
+			.set("Cookie", cookie)
+			.expect(200)
+	})
+})
 
-// describe("GET /reports/borrowers", () => {
-// 	const url = "/reports/borrowers"
-// 	let ids: number[]
-
-// 	beforeAll(async () => {
-// 		const emails = [
-// 			"mike.smith" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
-// 			"kate.smith" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
-// 		]
-
-// 		await supertest(baseUrl).post("/borrowers").set("Cookie", cookie).send({
-// 			firstName: "Mike",
-// 			lastName: "Smith",
-// 			email: emails[0],
-// 		})
-
-// 		await supertest(baseUrl).post("/borrowers").set("Cookie", cookie).send({
-// 			firstName: "Kate",
-// 			lastName: "Smith",
-// 			email: emails[1],
-// 		})
-
-// 		const response = await supertest(baseUrl)
-// 			.get("/borrowers")
-// 			.set("Cookie", cookie)
-
-// 		ids = [
-// 			response.body.data.find(
-// 				(borrower: {
-// 					_id: number
-// 					_firstName: string
-// 					_lastName: string
-// 					_email: string
-// 				}) => borrower._email === emails[0]
-// 			)._id,
-// 			response.body.data.find(
-// 				(borrower: {
-// 					_id: number
-// 					_firstName: string
-// 					_lastName: string
-// 					_email: string
-// 				}) => borrower._email === emails[1]
-// 			)._id,
-// 		]
-// 	})
-
-// 	it("should return 401 if user is not logged in", async () =>
-// 		supertest(baseUrl).get(url).expect(401))
-
-// 	it("should return 200", async () =>
-// 		supertest(baseUrl).get(url).set("Cookie", cookie).expect(200))
-
-// 	afterAll(async () => {
-// 		await supertest(baseUrl)
-// 			.delete("/borrowers/" + ids[0])
-// 			.set("Cookie", cookie)
-// 		await supertest(baseUrl)
-// 			.delete("/borrowers/" + ids[1])
-// 			.set("Cookie", cookie)
-// 	})
-// })
+afterAll(async () => {
+	await supertest(baseUrl)
+		.delete("/books")
+		.set("Cookie", cookie)
+		.send({ ISBN: bookData.ISBN })
+	await supertest(baseUrl)
+		.delete("/borrowers")
+		.set("Cookie", cookie)
+		.send({ id: borrowerData.id })
+})
