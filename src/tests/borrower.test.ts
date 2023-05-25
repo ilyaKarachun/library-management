@@ -16,7 +16,7 @@ const borrowerData = {
 	email: "john.doe" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
 }
 
-describe("GET /borrowers", () => {
+describe("GET /borrowers", () => { 
 	const url = "/borrowers"
 
 	it("should return 401 if user is not logged in", async () => supertest(baseUrl).get(url).expect(401))

@@ -88,12 +88,12 @@ describe('PUT /books', () => {
 });
 
 describe('DELETE /books/:isbn', () => {
-  it('should delete a book by ISBN', async () => {
-    const isbn = newBook.ISBN;
-    console.log(isbn, 'deleted')
-    await supertest(baseUrl)
-      .delete(`/books/${isbn}`)
-      .set('Cookie', cookie)
-      .expect(204);
+    it('should delete a book by ISBN', async () => {
+      const isbn = newBook.ISBN;
+      console.log(isbn, 'deleted')
+      await supertest(baseUrl)
+        .delete(`/books/${isbn}`)
+        .set('Cookie', cookie)
+        .expect(204);
+    });
   });
-});
