@@ -65,7 +65,7 @@ export class BorrowingController {
 	checkAvailability = async (req: Request, res: Response) => {
 		try {
 			const ISBN: string = req.query.ISBN as string;
-
+			console.log(ISBN)
 			if (!ISBN) {
 				return res.status(422).json({ error: "Missing required field: ISBN" });
 			}
@@ -86,6 +86,7 @@ export class BorrowingController {
 				req.query.borrowerId as string,
 				10
 			)
+			console.log(borrowerId)
 			if (isNaN(borrowerId)) {
 				return res
 					.status(422)
@@ -113,6 +114,7 @@ export class BorrowingController {
 				req.query.borrowerId as string,
 				10
 			)
+			console.log(borrowerId)
 			if (isNaN(borrowerId)) {
 				return res
 					.status(422)
