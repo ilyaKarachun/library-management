@@ -18,7 +18,6 @@ export class BorrowingRepository {
 			await client.query("COMMIT");
 		} catch (err) {
 			await client.query("ROLLBACK");
-			console.log(err);
 			throw new Error("Error while borrowing");
 		} finally {
 			client.release();
