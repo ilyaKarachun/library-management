@@ -25,7 +25,6 @@ export class AuthController {
                 return res.status(404).json({ error: "User not found" });
             }
             const isVerified = await argon2.verify(user.hashedPass, password);
-    
             if(isVerified){
                 //generate tokens
                 const tokens = generateTokens();

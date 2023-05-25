@@ -81,7 +81,7 @@ class BookController {
     const ISBN: string = String(req.params.isbn);
     try {
       await this.bookRepository.delete(ISBN);
-        return res.status(200).json({ message: 'Book deleted' });
+      return res.status(204).json({message:'204 book deleted'})
     } catch (err) {
       return res.status(500).json({ error: "Something broke!"});
     }
