@@ -118,28 +118,24 @@ export class BookRepository {
   }
 
   async update(newBook: BookDTO): Promise<BookDTO> {
-    const client = await pool.connect();
 
     const authorQuery = 'UPDATE authors SET first_name = $2, last_name = $3 WHERE author_id = (SELECT author_id FROM books WHERE ISBN = $1);';
     const bookQuery = 'UPDATE books SET ISBN = $1, title = $2, publication_year = $3 WHERE ISBN = $1;';
-
     try {
-      await client.query('BEGIN');
-      await client.query(authorQuery, [newBook.ISBN, newBook.author.firstName, newBook.author.lastName]);
-      await client.query(bookQuery, [newBook.ISBN, newBook.title, newBook.year]);
-      await client.query('COMMIT');
+      await pool.query('BEGIN');
+      console.log(newBook)
+      await pool.query(authorQuery, [newBook.ISBN, newBook.author.firstName, newBook.author.lastName]);
+      await pool.query(bookQuery, [newBook.ISBN, newBook.title, newBook.year]);
+      await pool.query('COMMIT');
       return newBook;
     } catch (err) {
-      await client.query('ROLLBACK');
+      await pool.query('ROLLBACK');
       throw new Error("Error while trying to update book");
-    } finally {
-      client.release();
-    }
+    } 
   }
 
   async delete(ISBN: string): Promise<void> {
     const queryText = 'DELETE FROM books WHERE ISBN = $1';
-
     try {
       await pool.query(queryText, [ISBN]);
     } catch (err) {
