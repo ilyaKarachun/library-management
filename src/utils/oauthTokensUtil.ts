@@ -24,16 +24,13 @@ async function storeTokens(tokens: {accessToken: string, refreshToken: string}, 
 
         await redisClient.expire(tokens.accessToken, accessTokenExpiration);
 
-
         await redisClient.set(
             tokens.refreshToken,
             JSON.stringify({tokenType: "refresh", userId: userId}),
             { EX: refreshTokenExpiration }
         );
 
-
         await redisClient.expire(tokens.refreshToken, refreshTokenExpiration);
-
 
     } catch (error) {
         console.error(`Error storing tokens in Redis: ${error}`);
