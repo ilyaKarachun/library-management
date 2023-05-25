@@ -2,25 +2,26 @@ import { pool } from "../db/dbConnection"
 import { BorrowingDTO } from "../dtos/borrowingDTO"
 
 export class BorrowingRepository {
-	async borrow(ISBN: string, borrowerId: string, dueDate: Date) {
-		const client = await pool.connect()
+	async borrow(ISBN: string, borrowerId: number, dueDate: Date) {
+		const client = await pool.connect();
 
 		try {
-			await client.query("BEGIN")
+			await client.query("BEGIN");
 			await client.query(
 				"INSERT INTO books_borrowers (isbn, borrower_id, borrowing_date, due_date) VALUES ($1, $2, $3, $4)",
 				[ISBN, borrowerId, new Date(), dueDate]
-			)
+			);
 			await client.query(
 				"UPDATE books SET is_available = false WHERE isbn = $1",
 				[ISBN]
-			)
-			await client.query("COMMIT")
+			);
+			await client.query("COMMIT");
 		} catch (err) {
-			await client.query("ROLLBACK")
-			throw new Error("Error while borrowing")
+			await client.query("ROLLBACK");
+			console.log(err);
+			throw new Error("Error while borrowing");
 		} finally {
-			client.release()
+			client.release();
 		}
 	}
 
@@ -47,19 +48,19 @@ export class BorrowingRepository {
 	}
 
 	async checkAvailability(ISBN: string) {
-		const client = await pool.connect()
-		const queryText = "SELECT is_available FROM books WHERE isbn = $1"
-		const values = [ISBN]
+		const client = await pool.connect();
+		const queryText = "SELECT is_available FROM books WHERE isbn = $1";
+		const values = [ISBN];
 		try {
-			const result = await client.query(queryText, values)
+			const result = await client.query(queryText, values);
 			if (result.rows.length > 0) {
-				const { is_available } = result.rows[0]
-				return is_available
+				const { is_available } = result.rows[0];
+				return is_available;
 			}
 		} catch (err) {
-			throw new Error(`Error while checking availability`)
+			throw new Error(`Error while checking availability`);
 		} finally {
-			client.release()
+			client.release();
 		}
 	}
 

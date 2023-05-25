@@ -10,13 +10,13 @@ export class BorrowingController {
 		this.borrowingRepository = new BorrowingRepository()
 	}
 
-	public async borrow(req: Request, res: Response) {
+	borrow = async (req: Request, res: Response) => {
 		try {
 			const {
 				ISBN,
 				borrowerId,
 				dueDate,
-			}: { ISBN: string; borrowerId: string; dueDate: string } = req.body
+			}: { ISBN: string; borrowerId: number; dueDate: string } = req.body
 
 			if (!ISBN || !borrowerId || !dueDate)
 				return res
@@ -37,11 +37,12 @@ export class BorrowingController {
 
 			return res.json({ message: "Book borrowed successfully" })
 		} catch (err) {
+			console.log(err);
 			res.status(500).json({ error: "Internal server error" })
 		}
 	}
 
-	public async return(req: Request, res: Response) {
+	return = async (req: Request, res: Response) => {
 		try {
 			const ISBN = req.params.isbn
 
@@ -61,25 +62,25 @@ export class BorrowingController {
 		}
 	}
 
-	public async checkAvailability(req: Request, res: Response) {
+	checkAvailability = async (req: Request, res: Response) => {
 		try {
-			const ISBN: string = req.query.ISBN as string
+			const ISBN: string = req.query.ISBN as string;
 
 			if (!ISBN) {
-				return res
-					.status(422)
-					.json({ error: "Missing required field: ISBN" })
+				return res.status(422).json({ error: "Missing required field: ISBN" });
 			}
 
-			if (await this.borrowingRepository.checkAvailability(ISBN)) {
-				res.status(200).json({ message: "Book is available" })
+			if (!await this.borrowingRepository.checkAvailability(ISBN)) {
+				return res.status(503).json({ error: "Book is not available" });
 			}
+
+			return res.status(200).json({ message: "Book is available" });
 		} catch (err) {
-			res.status(500).json({ error: "Internal server error" })
+			return res.status(500).json({ error: "Internal server error" });
 		}
 	}
 
-	public async getBorrowingHistory(req: Request, res: Response) {
+	getBorrowingHistory = async (req: Request, res: Response) => {
 		try {
 			const borrowerId: number = parseInt(
 				req.query.borrowerId as string,
@@ -106,7 +107,7 @@ export class BorrowingController {
 		}
 	}
 
-	public async borrowerDueDates(req: Request, res: Response) {
+	borrowerDueDates = async (req: Request, res: Response) => {
 		try {
 			const borrowerId: number = parseInt(
 				req.query.borrowerId as string,
