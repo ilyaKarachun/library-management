@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 import { baseUrl, adminCredentials } from './index';
-
+​
 let cookie: string;
-
+​
 beforeAll(async () => {
   const response = await supertest(baseUrl)
     .post('/login')
@@ -10,7 +10,7 @@ beforeAll(async () => {
   cookie = response.headers['set-cookie'];
   console.log(cookie, adminCredentials);
 });
-
+​
 const newBook = {
     ISBN: '3213211233211',
     title: 'title of a book',
@@ -18,13 +18,13 @@ const newBook = {
     year: 2000,
     isAvailable: true,
   };
-
+​
   const newBorrower = {
     firstName:"name",
     lastName:"surname",
     email:"borrower@gmail.com"
   }
-
+​
   const newBorrowings = {
     ISBN:"3213213213212",
     borrowerId:"1",
@@ -40,7 +40,7 @@ const newBook = {
         .expect(201);
     });
   });
-
+​
   describe("POST /borrowers", () => {
     const url = "/borrowers"
   
@@ -51,12 +51,12 @@ const newBook = {
         .send(newBorrower)
         .expect(201))
   })
-
-
-
+​
+​
+​
   describe('POST /borrowings', ()=>{
     const url = "/borrowings"
-
+​
     it("should create a borrowing" , async()=>{
       supertest(baseUrl)
       .post(url)
@@ -65,10 +65,10 @@ const newBook = {
       .expect(201)
     })
   })
-
+​
 describe("GET /borrowings/availability", ()=>{
   const url = `/borrowings/availability?ISBN=${newBook.ISBN}`
-
+​
   it("should return 200 book is avaliable", async ()=>{
     supertest(baseUrl)
     .get(url)
@@ -76,10 +76,10 @@ describe("GET /borrowings/availability", ()=>{
     .expect(200)
   })
 })
-
+​
 describe("GET /borrowings/history", ()=>{
   const url = `/borrowings/history?borrowerId=${newBorrowings.borrowerId}`
-
+​
   it("should return 200 and history of a borrower", async ()=>{
     supertest(baseUrl)
     .get(url)
@@ -87,11 +87,11 @@ describe("GET /borrowings/history", ()=>{
     .expect(200)
   })
 })
-
-
+​
+​
 describe("GET /borrowings/overdue", ()=>{
   const url = `/borrowings/overdue?borrowerId=${newBorrowings.borrowerId}`
-
+​
   it("should return 200 and overdue of a borrower", async ()=>{
     supertest(baseUrl)
     .get(url)
@@ -99,10 +99,10 @@ describe("GET /borrowings/overdue", ()=>{
     .expect(200)
   })
 })
-
+​
 describe("PUT /borrowings/:isbn", ()=>{
   const url = `/borrowings/${newBorrowings.ISBN}`
-
+​
   it("should return 200 Book returned successfully", async ()=>{
     supertest(baseUrl)
     .put(url)
@@ -110,11 +110,11 @@ describe("PUT /borrowings/:isbn", ()=>{
     .expect(200)
   })
 })
-
-
-
-
-
+​
+​
+​
+​
+​
 describe('return 422 error', ()=>{
     it('should return a 422 error for missing required fields', async () => {
         const borrowingData = {};
@@ -141,4 +141,4 @@ describe('return 422 error', ()=>{
       });
     
 })
-  
+    
