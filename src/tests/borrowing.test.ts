@@ -8,7 +8,6 @@ beforeAll(async () => {
     .post('/login')
     .send(adminCredentials);
   cookie = response.headers['set-cookie'];
-  console.log(cookie, adminCredentials);
 });
 
 const newBook = {
@@ -142,3 +141,15 @@ describe('return 422 error', ()=>{
     
 })
   
+
+
+describe('DELETE /books/:isbn', () => {
+  it('should delete a book after test', async () => {
+    const isbn = newBook.ISBN;
+    console.log(isbn, 'deleted')
+    await supertest(baseUrl)
+      .delete(`/books/${isbn}`)
+      .set('Cookie', cookie)
+      .expect(204);
+  });
+});
