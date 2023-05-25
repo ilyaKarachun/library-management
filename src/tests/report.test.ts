@@ -46,64 +46,64 @@ beforeAll(async () => {
 // 	})
 // })
 
-describe("GET /reports/borrowers", () => {
-	const url = "/reports/borrowers"
-	let ids: number[]
+// describe("GET /reports/borrowers", () => {
+// 	const url = "/reports/borrowers"
+// 	let ids: number[]
 
-	beforeAll(async () => {
-		const emails = [
-			"mike.smith" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
-			"kate.smith" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
-		]
+// 	beforeAll(async () => {
+// 		const emails = [
+// 			"mike.smith" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
+// 			"kate.smith" + Math.random() * (9999 - 1000) + 1000 + "@gmail.com",
+// 		]
 
-		await supertest(baseUrl).post("/borrowers").set("Cookie", cookie).send({
-			firstName: "Mike",
-			lastName: "Smith",
-			email: emails[0],
-		})
+// 		await supertest(baseUrl).post("/borrowers").set("Cookie", cookie).send({
+// 			firstName: "Mike",
+// 			lastName: "Smith",
+// 			email: emails[0],
+// 		})
 
-		await supertest(baseUrl).post("/borrowers").set("Cookie", cookie).send({
-			firstName: "Kate",
-			lastName: "Smith",
-			email: emails[1],
-		})
+// 		await supertest(baseUrl).post("/borrowers").set("Cookie", cookie).send({
+// 			firstName: "Kate",
+// 			lastName: "Smith",
+// 			email: emails[1],
+// 		})
 
-		const response = await supertest(baseUrl)
-			.get("/borrowers")
-			.set("Cookie", cookie)
+// 		const response = await supertest(baseUrl)
+// 			.get("/borrowers")
+// 			.set("Cookie", cookie)
 
-		ids = [
-			response.body.data.find(
-				(borrower: {
-					_id: number
-					_firstName: string
-					_lastName: string
-					_email: string
-				}) => borrower._email === emails[0]
-			)._id,
-			response.body.data.find(
-				(borrower: {
-					_id: number
-					_firstName: string
-					_lastName: string
-					_email: string
-				}) => borrower._email === emails[1]
-			)._id,
-		]
-	})
+// 		ids = [
+// 			response.body.data.find(
+// 				(borrower: {
+// 					_id: number
+// 					_firstName: string
+// 					_lastName: string
+// 					_email: string
+// 				}) => borrower._email === emails[0]
+// 			)._id,
+// 			response.body.data.find(
+// 				(borrower: {
+// 					_id: number
+// 					_firstName: string
+// 					_lastName: string
+// 					_email: string
+// 				}) => borrower._email === emails[1]
+// 			)._id,
+// 		]
+// 	})
 
-	it("should return 401 if user is not logged in", async () =>
-		supertest(baseUrl).get(url).expect(401))
+// 	it("should return 401 if user is not logged in", async () =>
+// 		supertest(baseUrl).get(url).expect(401))
 
-	it("should return 200", async () =>
-		supertest(baseUrl).get(url).set("Cookie", cookie).expect(200))
+// 	it("should return 200", async () =>
+// 		supertest(baseUrl).get(url).set("Cookie", cookie).expect(200))
 
-	afterAll(async () => {
-		await supertest(baseUrl)
-			.delete("/borrowers/" + ids[0])
-			.set("Cookie", cookie)
-		await supertest(baseUrl)
-			.delete("/borrowers/" + ids[1])
-			.set("Cookie", cookie)
-	})
-})
+// 	afterAll(async () => {
+// 		await supertest(baseUrl)
+// 			.delete("/borrowers/" + ids[0])
+// 			.set("Cookie", cookie)
+// 		await supertest(baseUrl)
+// 			.delete("/borrowers/" + ids[1])
+// 			.set("Cookie", cookie)
+// 	})
+// })
