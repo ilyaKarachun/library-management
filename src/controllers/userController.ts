@@ -58,12 +58,13 @@ export class UserController {
         try {
             const hashedPass = await argon2.hash(password);
             const user = new UserDTO(null, firstName, lastName, email, hashedPass);
+            const result: UserDTO | null = await this.userRepository.create(user);
 
-            const result: UserDTO = await this.userRepository.create(user);
-            res.status(201).json({
-                data: result,
-                message: 'User created successfully',
-            });
+            if(!result){
+                return res.status(409).json( {error: "User already exists"} );
+            }
+
+            return res.status(201).json({data: result, message: 'User created successfully'});
         } catch (err) {
             res.status(500).json({ message: "error creating user" });
         }

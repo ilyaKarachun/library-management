@@ -57,7 +57,7 @@ class BookController {
 
       const createdBook: BookDTO | null = await this.bookRepository.create(newBook);
       if (!createdBook) {
-        return res.status(500).json({ error: "Failed to create book"});
+        return res.status(409).json({ error: "Book already exists"});
       } else {
         return res.status(201).json(createdBook);
       }

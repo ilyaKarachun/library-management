@@ -65,10 +65,17 @@ export class UserRepository {
         }
     };
 
-    create = async (user: UserDTO): Promise<UserDTO> => {
-        const queryText = 'INSERT INTO users (first_name, last_name, email, hashed_pass) VALUES ($1, $2, $3, $4) RETURNING user_id';
-        const values = [user.firstName, user.lastName, user.email, user.hashedPass];
+    create = async (user: UserDTO): Promise<UserDTO | null> => {
         try {
+            const getUserResult = await pool.query('SELECT user_id FROM users WHERE email = $1', [user.email]);
+
+            if(getUserResult && getUserResult.rows.length){
+                return null;
+            }
+
+            const queryText = 'INSERT INTO users (first_name, last_name, email, hashed_pass) VALUES ($1, $2, $3, $4) RETURNING user_id';
+            const values = [user.firstName, user.lastName, user.email, user.hashedPass];
+
             const result = await pool.query(queryText, values);
             user.id = result.rows[0].user_id;
             user.hashedPass = undefined;
